@@ -1,5 +1,7 @@
 using DotNetEnv;
 using LibrarySystem.Data;
+using LibrarySystem.Filters;
+using LibrarySystem.Middlewares;
 using LibrarySystem.Repositories.Author;
 using LibrarySystem.Repositories.Book;
 using LibrarySystem.Services.Author;
@@ -8,7 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -35,6 +40,8 @@ builder.Services.AddDbContext<AppDbContext>(
 );
 
 var app = builder.Build();
+
+app.UseMiddleware<ValidationMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

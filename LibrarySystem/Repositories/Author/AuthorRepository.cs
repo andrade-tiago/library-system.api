@@ -16,14 +16,19 @@ public class AuthorRepository : IAuthorRepository
     {
         return await _context.Authors.FirstOrDefaultAsync(a => a.Id == id);
     }
-    
+
+    public async Task<List<Models.Author>> GetByIdsAsync(IEnumerable<int> authorIds)
+    {
+        return await _context.Authors
+            .Where(a => authorIds.Contains(a.Id))
+            .ToListAsync();
+    }
+
     public async Task<List<Models.Author>?> GetByBookIdAsync(int bookId)
     {
-        return await _context.Books
-            .AsQueryable()
-            .Where(b => b.Id == bookId)
-            .SelectMany(b => b.Authors)
-            .ToListAsync();
+        var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
+
+        return book?.Authors;
     }
 
     public async Task<List<Models.Author>> GetAuthorsAsync(int page, int pageSize)
@@ -40,6 +45,11 @@ public class AuthorRepository : IAuthorRepository
     public async Task<int> GetTotalCountAsync()
     {
         return await _context.Authors.CountAsync();
+    }
+
+    public async Task<bool> AuthorExistsAsync(int authorId)
+    {
+        return await _context.Authors.AnyAsync(a => a.Id == authorId);
     }
 
     public async Task<Models.Author> CreateAsync(Models.Author author)

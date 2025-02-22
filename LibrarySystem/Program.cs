@@ -1,7 +1,9 @@
 using DotNetEnv;
 using LibrarySystem.Data;
 using LibrarySystem.Repositories.Author;
+using LibrarySystem.Repositories.Book;
 using LibrarySystem.Services.Author;
+using LibrarySystem.Services.Book;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +13,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
 
 builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 if (builder.Environment.IsDevelopment())
 {

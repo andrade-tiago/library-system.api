@@ -134,4 +134,14 @@ public class AuthorService : IAuthorService
         };
         return response;
     }
+
+    public async Task<bool> AuthorExistsAsync(int authorId)
+    {
+        return await _authorRepository.AuthorExistsAsync(authorId);
+    }
+
+    public async Task<List<Models.Author>> GetByIdsAsync(IEnumerable<int> authorIds)
+    {
+        return await _authorRepository.GetByIdsAsync(authorIds);
+    }
 }

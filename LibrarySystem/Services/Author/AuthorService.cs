@@ -63,17 +63,15 @@ public class AuthorService : IAuthorService
         ApiResponse<List<AuthorDto>> response = new();
 
         var totalCount = await _authorRepository.GetTotalCountAsync();
-        var totalPages = (int)Math.Ceiling((double)totalCount / pagination.PageSize);
 
         response.Pagination = new Pagination
         {
             CurrentPage  = pagination.Page,
             ItemsPerPage = pagination.PageSize,
             TotalItems   = totalCount,
-            TotalPages   = totalPages,
         };
 
-        if (pagination.Page > totalPages)
+        if (pagination.Page > response.Pagination.TotalPages)
         {
             response.Message = "No authors found for this page";
             response.Result = [];

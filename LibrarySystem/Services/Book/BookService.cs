@@ -37,17 +37,15 @@ public class BookService(
         ApiResponse<List<BookDto>> response = new();
 
         var totalCount = await _bookRepository.GetTotalCountAsync();
-        var totalPages = (int)Math.Ceiling((double)totalCount / pagination.PageSize);
 
         response.Pagination = new Pagination
         {
             CurrentPage = pagination.Page,
             ItemsPerPage = pagination.PageSize,
             TotalItems = totalCount,
-            TotalPages = totalPages,
         };
 
-        if (pagination.Page > totalPages)
+        if (pagination.Page > response.Pagination.TotalPages)
         {
             response.Message = BookMessages.PageEmpty;
             response.Result = [];
@@ -73,17 +71,15 @@ public class BookService(
         }
 
         var totalCount = await _bookRepository.GetAuthorBooksTotalCountAsync(authorId);
-        var totalPages = (int)Math.Ceiling((double)totalCount / pagination.PageSize);
 
         response.Pagination = new Pagination
         {
             CurrentPage  = pagination.Page,
             ItemsPerPage = pagination.PageSize,
             TotalItems   = totalCount,
-            TotalPages   = totalPages,
         };
 
-        if (pagination.Page > totalPages)
+        if (pagination.Page > response.Pagination.TotalPages)
         {
             response.Result  = [];
             response.Message = totalCount > 0

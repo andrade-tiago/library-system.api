@@ -4,6 +4,7 @@ using LibrarySystem.Filters;
 using LibrarySystem.Middlewares;
 using LibrarySystem.Repositories.Author;
 using LibrarySystem.Repositories.Book;
+using LibrarySystem.Repositories.Customer;
 using LibrarySystem.Services.Author;
 using LibrarySystem.Services.Book;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IBookService, BookService>();

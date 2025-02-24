@@ -7,6 +7,7 @@ using LibrarySystem.Repositories.Book;
 using LibrarySystem.Repositories.Customer;
 using LibrarySystem.Services.Author;
 using LibrarySystem.Services.Book;
+using LibrarySystem.Services.Customer;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,7 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 if (builder.Environment.IsDevelopment())
 {

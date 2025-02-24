@@ -24,6 +24,7 @@ public class BookService(
 
         if (book is null)
         {
+            response.Success = false;
             response.Message = BookMessages.NotFound;
             return response;
         }
@@ -66,6 +67,7 @@ public class BookService(
 
         if (!authorExists)
         {
+            response.Success = false;
             response.Message = AuthorMessages.NotFound;
             return response;
         }
@@ -102,6 +104,7 @@ public class BookService(
 
         if (authors.Count != dto.AuthorIds.Count)
         {
+            response.Success = false;
             response.Message = AuthorMessages.AuthorsNotFound;
             return response;
         }
@@ -125,6 +128,7 @@ public class BookService(
         var book = await _bookRepository.GetByIdAsync(bookId);
         if (book is null)
         {
+            response.Success = false;
             response.Message = BookMessages.NotFound;
             return response;
         }
@@ -144,6 +148,7 @@ public class BookService(
 
             if (authorsToAdd.Count != authorIdsToAdd.Count)
             {
+                response.Success = false;
                 response.Message = AuthorMessages.AuthorsNotFound;
                 return response;
             }

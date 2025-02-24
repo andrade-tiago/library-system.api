@@ -22,6 +22,7 @@ public class AuthorService : IAuthorService
         var author = await _authorRepository.GetByIdAsync(id);
         if (author == null)
         {
+            response.Success = false;
             response.Message = "Author not found";
             return response;
         }
@@ -42,6 +43,7 @@ public class AuthorService : IAuthorService
         var authors = await _authorRepository.GetByBookIdAsync(bookId);
         if (authors == null)
         {
+            response.Success = false;
             response.Message = "Book not found";
             return response;
         }
@@ -117,6 +119,7 @@ public class AuthorService : IAuthorService
         var author = await _authorRepository.GetByIdAsync(id);
         if (author == null)
         {
+            response.Success = false;
             response.Message = "Author not found";
             return response;
         }

@@ -1,6 +1,7 @@
 using DotNetEnv;
 using LibrarySystem.Data;
 using LibrarySystem.Filters;
+using LibrarySystem.Mappers;
 using LibrarySystem.Middlewares;
 using LibrarySystem.Repositories.Author;
 using LibrarySystem.Repositories.Book;
@@ -26,6 +27,10 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+
+builder.Services.AddAutoMapper(typeof(AuthorProfile));
+builder.Services.AddAutoMapper(typeof(BookProfile));
+builder.Services.AddAutoMapper(typeof(CustomerProfile));
 
 if (builder.Environment.IsDevelopment())
 {

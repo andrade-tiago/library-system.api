@@ -1,19 +1,18 @@
-﻿using LibrarySystem.DTOs.Author;
+﻿using AutoMapper;
+using LibrarySystem.DTOs.Author;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
-using LibrarySystem.Models;
 using LibrarySystem.Repositories.Author;
 
 namespace LibrarySystem.Services.Author;
 
-public class AuthorService : IAuthorService
+public class AuthorService(
+    IAuthorRepository authorRepository,
+    IMapper mapper
+) : IAuthorService
 {
-    private readonly IAuthorRepository _authorRepository;
-
-    public AuthorService(IAuthorRepository authorRepository)
-    {
-        _authorRepository = authorRepository;
-    }
+    private readonly IAuthorRepository _authorRepository = authorRepository;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<ApiResponse<AuthorDto?>> GetByIdAsync(int id)
     {
@@ -28,11 +27,7 @@ public class AuthorService : IAuthorService
         }
 
         response.Message = "Author successfully found";
-        response.Result  = new AuthorDto
-        {
-            Id   = author.Id,
-            Name = author.Name,
-        };
+        response.Result  = _mapper.Map<AuthorDto>(author);
         return response;
     }
 
@@ -49,13 +44,7 @@ public class AuthorService : IAuthorService
         }
 
         response.Message = "Authors successfully found";
-        response.Result  = authors.Select(a =>
-            new AuthorDto
-            {
-                Id   = a.Id,
-                Name = a.Name,
-            }
-        ).ToList();
+        response.Result  = _mapper.Map<List<AuthorDto>>(authors);
 
         return response;
     }
@@ -82,13 +71,7 @@ public class AuthorService : IAuthorService
         var authors = await _authorRepository.GetAuthorsAsync(pagination.Page, pagination.PageSize);
 
         response.Message = "Authors fetched successfully";
-        response.Result  = authors.Select(a =>
-            new AuthorDto
-            {
-                Id   = a.Id,
-                Name = a.Name,
-            }
-        ).ToList();
+        response.Result  = _mapper.Map<List<AuthorDto>>(authors);
 
         return response;
     }
@@ -97,18 +80,11 @@ public class AuthorService : IAuthorService
     {
         ApiResponse<AuthorDto> response = new();
 
-        var author = new Models.Author
-        {
-            Name = createDto.Name,
-        };
+        var author = _mapper.Map<Models.Author>(createDto);
         await _authorRepository.CreateAsync(author);
 
         response.Message = "Author created successfully";
-        response.Result  = new AuthorDto
-        {
-            Id   = author.Id,
-            Name = author.Name,
-        };
+        response.Result  = _mapper.Map<AuthorDto>(author);
         return response;
     }
 
@@ -124,15 +100,11 @@ public class AuthorService : IAuthorService
             return response;
         }
 
-        author.Name = updateDto.Name;
+        _mapper.Map(updateDto, author);
         await _authorRepository.UpdateAsync(author);
 
         response.Message = "Author updated successfully";
-        response.Result  = new AuthorDto
-        {
-            Id   = author.Id,
-            Name = author.Name,
-        };
+        response.Result  = _mapper.Map<AuthorDto>(author);
         return response;
     }
 

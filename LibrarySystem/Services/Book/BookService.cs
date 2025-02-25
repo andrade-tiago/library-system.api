@@ -1,8 +1,8 @@
-﻿using LibrarySystem.Constants.ResponseMessages;
+﻿using AutoMapper;
+using LibrarySystem.Constants.ResponseMessages;
 using LibrarySystem.DTOs.Book;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
-using LibrarySystem.Mappers;
 using LibrarySystem.Repositories.Book;
 using LibrarySystem.Services.Author;
 
@@ -10,11 +10,13 @@ namespace LibrarySystem.Services.Book;
 
 public class BookService(
     IBookRepository bookRepository,
-    IAuthorService authorService
+    IAuthorService authorService,
+    IMapper mapper
 ) : IBookService
 {
     private readonly IBookRepository _bookRepository = bookRepository;
     private readonly IAuthorService _authorService = authorService;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<ApiResponse<BookDto?>> GetByIdAsync(int id)
     {
@@ -29,7 +31,7 @@ public class BookService(
             return response;
         }
         response.Message = BookMessages.BookFoundSuccessfully;
-        response.Result = BookMapper.ToDto(book);
+        response.Result  = _mapper.Map<BookDto>(book);
         return response;
     }
 
@@ -41,9 +43,9 @@ public class BookService(
 
         response.Pagination = new Pagination
         {
-            CurrentPage = pagination.Page,
+            CurrentPage  = pagination.Page,
             ItemsPerPage = pagination.PageSize,
-            TotalItems = totalCount,
+            TotalItems   = totalCount,
         };
 
         if (pagination.Page > response.Pagination.TotalPages)
@@ -55,7 +57,7 @@ public class BookService(
         var books = await _bookRepository.GetBooksAsync(pagination.Page, pagination.PageSize);
 
         response.Message = BookMessages.BooksFoundSuccessfully;
-        response.Result = books.Select(b => BookMapper.ToDto(b)).ToList();
+        response.Result  = _mapper.Map<List<BookDto>>(books);
         return response;
     }
 
@@ -92,7 +94,7 @@ public class BookService(
         var books = await _bookRepository.GetByAuthorIdAsync(authorId, pagination.Page, pagination.PageSize);
 
         response.Message = BookMessages.BooksFoundSuccessfully;
-        response.Result  = books.Select(b => BookMapper.ToDto(b)).ToList();
+        response.Result  = _mapper.Map<List<BookDto>>(books);
         return response;
     }
 
@@ -108,16 +110,13 @@ public class BookService(
             response.Message = AuthorMessages.AuthorsNotFound;
             return response;
         }
-        var book = new Models.Book
-        {
-            Title       = dto.Title,
-            ReleaseDate = dto.ReleaseDate,
-            Authors     = authors,
-        };
+        var book = _mapper.Map<Models.Book>(dto);
+        book.Authors = authors;
+
         await _bookRepository.CreateBookAsync(book);
 
         response.Message = BookMessages.Created;
-        response.Result  = BookMapper.ToDto(book);
+        response.Result  = _mapper.Map<BookDto>(book);
         return response;
     }
 
@@ -154,13 +153,11 @@ public class BookService(
             }
             book.Authors.AddRange(authorsToAdd);
         }
-
-        book.Title       = dto.Title;
-        book.ReleaseDate = dto.ReleaseDate;
+        _mapper.Map(dto, book);
         await _bookRepository.UpdateBookAsync(book);
 
         response.Message = BookMessages.Updated;
-        response.Result  = BookMapper.ToDto(book);
+        response.Result  = _mapper.Map<BookDto>(book);
         return response;
     }
 }

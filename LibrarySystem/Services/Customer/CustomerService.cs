@@ -1,4 +1,5 @@
-﻿using LibrarySystem.Constants.ResponseMessages;
+﻿using AutoMapper;
+using LibrarySystem.Constants.ResponseMessages;
 using LibrarySystem.DTOs.Customer;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
@@ -7,9 +8,13 @@ using LibrarySystem.Repositories.Customer;
 
 namespace LibrarySystem.Services.Customer;
 
-public class CustomerService(ICustomerRepository customerRepository) : ICustomerService
+public class CustomerService(
+    ICustomerRepository customerRepository,
+    IMapper mapper
+) : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository = customerRepository;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<ApiResponse<CustomerDto?>> GetByIdAsync(int id)
     {
@@ -24,7 +29,7 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
             return response;
         }
         response.Message = CustomerMessages.Fetched;
-        response.Result  = CustomerMapper.ToDto(customer);
+        response.Result  = _mapper.Map<CustomerDto>(customer);
         return response;
     }
 
@@ -43,7 +48,6 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
 
         if (response.Pagination.CurrentPage > response.Pagination.TotalPages)
         {
-            // response.Success = false;
             response.Message = CustomerMessages.EmptyPage;
             response.Result  = [];
             return response;
@@ -51,7 +55,7 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
         var customers = await _customerRepository.GetCustomersAsync(pagination.Page, pagination.PageSize);
 
         response.Message = CustomerMessages.FetchedMany;
-        response.Result = [.. customers.Select(CustomerMapper.ToDto)];
+        response.Result  = _mapper.Map<List<CustomerDto>>(customers);
         return response;
     }
 
@@ -65,11 +69,11 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
             response.Message = CustomerMessages.InvalidCpf;
             return response;
         }
-        var customer = CustomerMapper.FromCreateDto(dto);
+        var customer = _mapper.Map<Models.Customer>(dto);
         await _customerRepository.CreateAsync(customer);
 
         response.Message = CustomerMessages.Created;
-        response.Result  = CustomerMapper.ToDto(customer);
+        response.Result  = _mapper.Map<CustomerDto>(customer);
         return response;
     }
 
@@ -85,11 +89,11 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
             response.Message = CustomerMessages.NotFound;
             return response;
         }
-        CustomerMapper.UpdateCustomer(customer, dto);
+        _mapper.Map(dto, customer);
         await _customerRepository.UpdateAsync(customer);
 
         response.Message = CustomerMessages.Updated;
-        response.Result  = CustomerMapper.ToDto(customer);
+        response.Result  = _mapper.Map<CustomerDto>(customer);
         return response;
     }
 

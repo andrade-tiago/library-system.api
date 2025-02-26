@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LibrarySystem.Constants.ResponseMessages;
 using LibrarySystem.DTOs.Author;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
@@ -22,11 +23,11 @@ public class AuthorService(
         if (author == null)
         {
             response.Success = false;
-            response.Message = "Author not found";
+            response.Message = AuthorMessages.NotFound;
             return response;
         }
 
-        response.Message = "Author successfully found";
+        response.Message = AuthorMessages.Fetched;
         response.Result  = _mapper.Map<AuthorDto>(author);
         return response;
     }
@@ -39,11 +40,11 @@ public class AuthorService(
         if (authors == null)
         {
             response.Success = false;
-            response.Message = "Book not found";
+            response.Message = BookMessages.NotFound;
             return response;
         }
 
-        response.Message = "Authors successfully found";
+        response.Message = AuthorMessages.FetchedMany;
         response.Result  = _mapper.Map<List<AuthorDto>>(authors);
 
         return response;
@@ -64,13 +65,13 @@ public class AuthorService(
 
         if (pagination.Page > response.Pagination.TotalPages)
         {
-            response.Message = "No authors found for this page";
-            response.Result = [];
+            response.Message = AuthorMessages.EmptyPage;
+            response.Result  = [];
             return response;
         }
         var authors = await _authorRepository.GetAuthorsAsync(pagination.Page, pagination.PageSize);
 
-        response.Message = "Authors fetched successfully";
+        response.Message = AuthorMessages.FetchedMany;
         response.Result  = _mapper.Map<List<AuthorDto>>(authors);
 
         return response;
@@ -83,7 +84,7 @@ public class AuthorService(
         var author = _mapper.Map<Models.Author>(createDto);
         await _authorRepository.CreateAsync(author);
 
-        response.Message = "Author created successfully";
+        response.Message = AuthorMessages.Created;
         response.Result  = _mapper.Map<AuthorDto>(author);
         return response;
     }
@@ -96,14 +97,14 @@ public class AuthorService(
         if (author == null)
         {
             response.Success = false;
-            response.Message = "Author not found";
+            response.Message = AuthorMessages.NotFound;
             return response;
         }
 
         _mapper.Map(updateDto, author);
         await _authorRepository.UpdateAsync(author);
 
-        response.Message = "Author updated successfully";
+        response.Message = AuthorMessages.Updated;
         response.Result  = _mapper.Map<AuthorDto>(author);
         return response;
     }

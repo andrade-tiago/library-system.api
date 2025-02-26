@@ -30,7 +30,7 @@ public class BookService(
             response.Message = BookMessages.NotFound;
             return response;
         }
-        response.Message = BookMessages.BookFoundSuccessfully;
+        response.Message = BookMessages.Fetched;
         response.Result  = _mapper.Map<BookDto>(book);
         return response;
     }
@@ -56,7 +56,7 @@ public class BookService(
         }
         var books = await _bookRepository.GetBooksAsync(pagination.Page, pagination.PageSize);
 
-        response.Message = BookMessages.BooksFoundSuccessfully;
+        response.Message = BookMessages.FetchedMany;
         response.Result  = _mapper.Map<List<BookDto>>(books);
         return response;
     }
@@ -93,7 +93,7 @@ public class BookService(
         }
         var books = await _bookRepository.GetByAuthorIdAsync(authorId, pagination.Page, pagination.PageSize);
 
-        response.Message = BookMessages.BooksFoundSuccessfully;
+        response.Message = BookMessages.FetchedMany;
         response.Result  = _mapper.Map<List<BookDto>>(books);
         return response;
     }
@@ -107,7 +107,7 @@ public class BookService(
         if (authors.Count != dto.AuthorIds.Count)
         {
             response.Success = false;
-            response.Message = AuthorMessages.AuthorsNotFound;
+            response.Message = AuthorMessages.NotFoundAny;
             return response;
         }
         var book = _mapper.Map<Models.Book>(dto);
@@ -148,7 +148,7 @@ public class BookService(
             if (authorsToAdd.Count != authorIdsToAdd.Count)
             {
                 response.Success = false;
-                response.Message = AuthorMessages.AuthorsNotFound;
+                response.Message = AuthorMessages.NotFoundAny;
                 return response;
             }
             book.Authors.AddRange(authorsToAdd);

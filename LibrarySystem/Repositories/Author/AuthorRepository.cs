@@ -36,7 +36,6 @@ public class AuthorRepository : IAuthorRepository
         int skipCount = (page - 1) * pageSize;
 
         return await _context.Authors
-            .AsQueryable()
             .Skip(skipCount)
             .Take(pageSize)
             .ToListAsync();

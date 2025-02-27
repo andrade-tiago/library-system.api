@@ -8,6 +8,6 @@ public interface IAuthorRepository
     Task<List<Models.Author>> GetAuthorsAsync(int page, int pageSize);
     Task<int> GetTotalCountAsync();
     Task<bool> AuthorExistsAsync(int authorId);
-    Task<Models.Author> CreateAsync(Models.Author author);
-    Task<Models.Author> UpdateAsync(Models.Author author);
+    Task<Models.Author?> CreateAsync(Models.Author author);
+    Task<Models.Author?> UpdateAsync(Models.Author author);
 }

@@ -51,17 +51,17 @@ public class BookRepository(AppDbContext context) : IBookRepository
             .CountAsync();
     }
 
-    public async Task<Models.Book> CreateBookAsync(Models.Book book)
+    public async Task<Models.Book?> CreateBookAsync(Models.Book book)
     {
         await _context.Books.AddAsync(book);
-        await _context.SaveChangesAsync();
-        return book;
+        var changesCount = await _context.SaveChangesAsync();
+        return changesCount > 0 ? book : null;
     }
 
-    public async Task<Models.Book> UpdateBookAsync(Models.Book book)
+    public async Task<Models.Book?> UpdateBookAsync(Models.Book book)
     {
         _context.Books.Update(book);
-        await _context.SaveChangesAsync();
-        return book;
+        var changesCount = await _context.SaveChangesAsync();
+        return changesCount > 0 ? book : null;
     }
 }

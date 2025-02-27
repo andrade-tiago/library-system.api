@@ -29,18 +29,18 @@ namespace LibrarySystem.Repositories.Customer
             return await _context.Customers.CountAsync();
         }
 
-        public async Task<Models.Customer> CreateAsync(Models.Customer customer)
+        public async Task<Models.Customer?> CreateAsync(Models.Customer customer)
         {
             await _context.Customers.AddAsync(customer);
-            await _context.SaveChangesAsync();
-            return customer;
+            var changesCount = await _context.SaveChangesAsync();
+            return changesCount > 0 ? customer : null;
         }
 
-        public async Task<Models.Customer> UpdateAsync(Models.Customer customer)
+        public async Task<Models.Customer?> UpdateAsync(Models.Customer customer)
         {
             _context.Customers.Update(customer);
-            await _context.SaveChangesAsync();
-            return customer;
+            var changesCount = await _context.SaveChangesAsync();
+            return changesCount > 0 ? customer : null;
         }
     }
 }

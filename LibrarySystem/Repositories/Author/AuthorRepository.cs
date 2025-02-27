@@ -51,17 +51,17 @@ public class AuthorRepository : IAuthorRepository
         return await _context.Authors.AnyAsync(a => a.Id == authorId);
     }
 
-    public async Task<Models.Author> CreateAsync(Models.Author author)
+    public async Task<Models.Author?> CreateAsync(Models.Author author)
     {
         await _context.Authors.AddAsync(author);
-        await _context.SaveChangesAsync();
-        return author;
+        var changesCount = await _context.SaveChangesAsync();
+        return changesCount > 0 ? author : null;
     }
 
-    public async Task<Models.Author> UpdateAsync(Models.Author author)
+    public async Task<Models.Author?> UpdateAsync(Models.Author author)
     {
         _context.Authors.Update(author);
-        await _context.SaveChangesAsync();
-        return author;
+        var changesCount = await _context.SaveChangesAsync();
+        return changesCount > 0 ? author : null;
     }
 }

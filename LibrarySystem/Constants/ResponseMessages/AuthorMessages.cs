@@ -6,7 +6,9 @@ public static class AuthorMessages
     public const string EmptyPage = "No authors found for this page";
     public const string Fetched = "Author fetched successfully";
     public const string FetchedMany = "Authors fetched successfully";
+    public const string NotCreated = "Error creating author";
     public const string NotFound = "Author not found";
     public const string NotFoundAny = "One or more authors not found";
+    public const string NotUpdated = "Error updating author";
     public const string Updated = "Author updated successfully";
 }

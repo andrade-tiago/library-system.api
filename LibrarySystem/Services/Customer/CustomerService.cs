@@ -3,7 +3,6 @@ using LibrarySystem.Constants.ResponseMessages;
 using LibrarySystem.DTOs.Customer;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
-using LibrarySystem.Mappers;
 using LibrarySystem.Repositories.Customer;
 
 namespace LibrarySystem.Services.Customer;
@@ -70,8 +69,14 @@ public class CustomerService(
             return response;
         }
         var customer = _mapper.Map<Models.Customer>(dto);
-        await _customerRepository.CreateAsync(customer);
+        var createdCustomer = await _customerRepository.CreateAsync(customer);
 
+        if (createdCustomer is null)
+        {
+            response.Success = false;
+            response.Message = CustomerMessages.NotCreated;
+            return response;
+        }
         response.Message = CustomerMessages.Created;
         response.Result  = _mapper.Map<CustomerDto>(customer);
         return response;
@@ -90,8 +95,14 @@ public class CustomerService(
             return response;
         }
         _mapper.Map(dto, customer);
-        await _customerRepository.UpdateAsync(customer);
+        var updatedCustomer = await _customerRepository.UpdateAsync(customer);
 
+        if (updatedCustomer is null)
+        {
+            response.Success = false;
+            response.Message = CustomerMessages.NotUpdated;
+            return response;
+        }
         response.Message = CustomerMessages.Updated;
         response.Result  = _mapper.Map<CustomerDto>(customer);
         return response;

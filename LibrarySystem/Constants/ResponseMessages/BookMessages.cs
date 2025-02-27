@@ -9,7 +9,9 @@ public static class BookMessages
     public const string PageEmpty = "No books found for this page";
     public const string ReleaseDateRequired = "Book release date required";
     public const string NoAuthorBooks = "No books found for this author";
+    public const string NotCreated = "Error creating book";
     public const string NotFound = "Book not found";
+    public const string NotUpdated = "Error updating book";
     public const string TitleRequired = "Book title required";
     public const string Updated = "Book updated successfully";
 }

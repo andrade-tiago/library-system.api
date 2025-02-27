@@ -26,7 +26,6 @@ public class AuthorService(
             response.Message = AuthorMessages.NotFound;
             return response;
         }
-
         response.Message = AuthorMessages.Fetched;
         response.Result  = _mapper.Map<AuthorDto>(author);
         return response;
@@ -43,10 +42,8 @@ public class AuthorService(
             response.Message = BookMessages.NotFound;
             return response;
         }
-
         response.Message = AuthorMessages.FetchedMany;
         response.Result  = _mapper.Map<List<AuthorDto>>(authors);
-
         return response;
     }
 
@@ -73,7 +70,6 @@ public class AuthorService(
 
         response.Message = AuthorMessages.FetchedMany;
         response.Result  = _mapper.Map<List<AuthorDto>>(authors);
-
         return response;
     }
 
@@ -82,8 +78,14 @@ public class AuthorService(
         ApiResponse<AuthorDto> response = new();
 
         var author = _mapper.Map<Models.Author>(createDto);
-        await _authorRepository.CreateAsync(author);
+        var createdAuthor = await _authorRepository.CreateAsync(author);
 
+        if (createdAuthor is null)
+        {
+            response.Success = false;
+            response.Message = AuthorMessages.NotCreated;
+            return response;
+        }
         response.Message = AuthorMessages.Created;
         response.Result  = _mapper.Map<AuthorDto>(author);
         return response;
@@ -100,10 +102,15 @@ public class AuthorService(
             response.Message = AuthorMessages.NotFound;
             return response;
         }
-
         _mapper.Map(updateDto, author);
-        await _authorRepository.UpdateAsync(author);
+        var updatedAuthor = await _authorRepository.UpdateAsync(author);
 
+        if (updatedAuthor is null)
+        {
+            response.Success = false;
+            response.Message = AuthorMessages.NotUpdated;
+            return response;
+        }
         response.Message = AuthorMessages.Updated;
         response.Result  = _mapper.Map<AuthorDto>(author);
         return response;

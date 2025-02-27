@@ -113,8 +113,14 @@ public class BookService(
         var book = _mapper.Map<Models.Book>(dto);
         book.Authors = authors;
 
-        await _bookRepository.CreateBookAsync(book);
+        var createdBook = await _bookRepository.CreateBookAsync(book);
 
+        if (createdBook is null)
+        {
+            response.Success = false;
+            response.Message = BookMessages.NotCreated;
+            return response;
+        }
         response.Message = BookMessages.Created;
         response.Result  = _mapper.Map<BookDto>(book);
         return response;
@@ -154,8 +160,14 @@ public class BookService(
             book.Authors.AddRange(authorsToAdd);
         }
         _mapper.Map(dto, book);
-        await _bookRepository.UpdateBookAsync(book);
+        var updatedBook = await _bookRepository.UpdateBookAsync(book);
 
+        if (updatedBook is null)
+        {
+            response.Success = false;
+            response.Message = BookMessages.NotUpdated;
+            return response;
+        }
         response.Message = BookMessages.Updated;
         response.Result  = _mapper.Map<BookDto>(book);
         return response;

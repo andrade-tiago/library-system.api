@@ -10,6 +10,8 @@ public static class CustomerMessages
     public const string FetchedMany = "Customers fetched successfully";
     public const string InvalidCpf = "Invalid CPF";
     public const string NameRequired = "Customer name required";
+    public const string NotCreated = "Error creating customer";
     public const string NotFound = "Customer not found";
+    public const string NotUpdated = "Error updating customer";
     public const string Updated = "Customer updated successfully";
 }

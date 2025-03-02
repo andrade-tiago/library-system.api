@@ -1,4 +1,6 @@
-﻿namespace LibrarySystem.DTOs.Response;
+﻿using LibrarySystem.Enums;
+
+namespace LibrarySystem.DTOs.Response;
 
 public class ApiResponse<T>
 {
@@ -7,4 +9,5 @@ public class ApiResponse<T>
     public T? Result { get; set; }
     public Pagination? Pagination { get; set; }
     public Dictionary<string, List<string>>? Errors { get; set; }
+    public ResponseCode? Code { get; set; }
 }

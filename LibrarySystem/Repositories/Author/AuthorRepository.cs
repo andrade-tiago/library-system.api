@@ -26,9 +26,10 @@ public class AuthorRepository : IAuthorRepository
 
     public async Task<List<Models.Author>?> GetByBookIdAsync(int bookId)
     {
-        var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
-
-        return book?.Authors;
+        return await _context.Authors
+            .Include(a => a.Books)
+            .Where(a => a.Books.Any(b => b.Id == bookId))
+            .ToListAsync();
     }
 
     public async Task<List<Models.Author>> GetAuthorsAsync(int page, int pageSize)

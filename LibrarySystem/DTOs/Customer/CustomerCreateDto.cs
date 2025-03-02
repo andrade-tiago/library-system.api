@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LibrarySystem.Constants.ResponseMessages;
+using LibrarySystem.Constants;
 
 namespace LibrarySystem.DTOs.Customer;
 
 public class CustomerCreateDto
 {
-    [Required(ErrorMessage = CustomerMessages.NameRequired)]
+    [Required(ErrorMessage = ResponseMessages.CustomerNameRequired)]
     public string Name { get; set; }
 
-    [Required(ErrorMessage = CustomerMessages.CpfRequired)]
+    [Required(ErrorMessage = ResponseMessages.CustomerCpfRequired)]
     public string Cpf { get; set; }
 
-    [Required(ErrorMessage = CustomerMessages.BirthDateRequired)]
+    [Required(ErrorMessage = ResponseMessages.CustomerBirthDateRequired)]
     public DateTime BirthDate { get; set; }
 }

@@ -1,18 +1,21 @@
 ﻿using AutoMapper;
-using LibrarySystem.Constants.ResponseMessages;
+using LibrarySystem.Constants;
 using LibrarySystem.DTOs.Author;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
 using LibrarySystem.Repositories.Author;
+using LibrarySystem.Repositories.Book;
 
 namespace LibrarySystem.Services.Author;
 
 public class AuthorService(
     IAuthorRepository authorRepository,
+    IBookRepository bookRepository,
     IMapper mapper
 ) : IAuthorService
 {
     private readonly IAuthorRepository _authorRepository = authorRepository;
+    private readonly IBookRepository _bookRepository = bookRepository;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ApiResponse<AuthorDto?>> GetByIdAsync(int id)
@@ -20,14 +23,13 @@ public class AuthorService(
         ApiResponse<AuthorDto?> response = new();
 
         var author = await _authorRepository.GetByIdAsync(id);
-        if (author == null)
+        if (author is null)
         {
-            response.Success = false;
-            response.Message = AuthorMessages.NotFound;
+            _mapper.Map(ResponseStatus.AuthorNotFound, response);
             return response;
         }
-        response.Message = AuthorMessages.Fetched;
-        response.Result  = _mapper.Map<AuthorDto>(author);
+        _mapper.Map(ResponseStatus.AuthorFetched, response);
+        response.Result = _mapper.Map<AuthorDto>(author);
         return response;
     }
 
@@ -35,15 +37,17 @@ public class AuthorService(
     {
         ApiResponse<List<AuthorDto>?> response = new();
 
-        var authors = await _authorRepository.GetByBookIdAsync(bookId);
-        if (authors == null)
+        var bookExists = await _bookRepository.BookExistsAsync(bookId);
+
+        if (!bookExists)
         {
-            response.Success = false;
-            response.Message = BookMessages.NotFound;
+            _mapper.Map(ResponseStatus.BookNotFound, response);
             return response;
         }
-        response.Message = AuthorMessages.FetchedMany;
-        response.Result  = _mapper.Map<List<AuthorDto>>(authors);
+        var authors = await _authorRepository.GetByBookIdAsync(bookId);
+
+        _mapper.Map(ResponseStatus.AuthorFetchedMany, response);
+        response.Result = _mapper.Map<List<AuthorDto>>(authors);
         return response;
     }
 
@@ -62,15 +66,20 @@ public class AuthorService(
 
         if (pagination.Page > response.Pagination.TotalPages)
         {
-            response.Message = AuthorMessages.EmptyPage;
-            response.Result  = [];
+            _mapper.Map(ResponseStatus.AuthorEmptyPage, response);
+            response.Result = [];
             return response;
         }
         var authors = await _authorRepository.GetAuthorsAsync(pagination.Page, pagination.PageSize);
 
-        response.Message = AuthorMessages.FetchedMany;
-        response.Result  = _mapper.Map<List<AuthorDto>>(authors);
+        _mapper.Map(ResponseStatus.AuthorFetchedMany, response);
+        response.Result = _mapper.Map<List<AuthorDto>>(authors);
         return response;
+    }
+
+    public async Task<List<Models.Author>> GetByIdsAsync(IEnumerable<int> authorIds)
+    {
+        return await _authorRepository.GetByIdsAsync(authorIds);
     }
 
     public async Task<ApiResponse<AuthorDto>> CreateAsync(AuthorCreateDto createDto)
@@ -82,12 +91,11 @@ public class AuthorService(
 
         if (createdAuthor is null)
         {
-            response.Success = false;
-            response.Message = AuthorMessages.NotCreated;
+            _mapper.Map(ResponseStatus.AuthorNotCreated, response);
             return response;
         }
-        response.Message = AuthorMessages.Created;
-        response.Result  = _mapper.Map<AuthorDto>(author);
+        _mapper.Map(ResponseStatus.AuthorCreated, response);
+        response.Result = _mapper.Map<AuthorDto>(author);
         return response;
     }
 
@@ -96,10 +104,9 @@ public class AuthorService(
         ApiResponse<AuthorDto?> response = new();
 
         var author = await _authorRepository.GetByIdAsync(id);
-        if (author == null)
+        if (author is null)
         {
-            response.Success = false;
-            response.Message = AuthorMessages.NotFound;
+            _mapper.Map(ResponseStatus.AuthorNotFound, response);
             return response;
         }
         _mapper.Map(updateDto, author);
@@ -107,22 +114,16 @@ public class AuthorService(
 
         if (updatedAuthor is null)
         {
-            response.Success = false;
-            response.Message = AuthorMessages.NotUpdated;
+            _mapper.Map(ResponseStatus.AuthorNotUpdated, response);
             return response;
         }
-        response.Message = AuthorMessages.Updated;
-        response.Result  = _mapper.Map<AuthorDto>(author);
+        _mapper.Map(ResponseStatus.AuthorUpdated, response);
+        response.Result = _mapper.Map<AuthorDto>(author);
         return response;
     }
 
     public async Task<bool> AuthorExistsAsync(int authorId)
     {
         return await _authorRepository.AuthorExistsAsync(authorId);
-    }
-
-    public async Task<List<Models.Author>> GetByIdsAsync(IEnumerable<int> authorIds)
-    {
-        return await _authorRepository.GetByIdsAsync(authorIds);
     }
 }

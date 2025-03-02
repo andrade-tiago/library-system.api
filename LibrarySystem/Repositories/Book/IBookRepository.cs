@@ -9,4 +9,5 @@ public interface IBookRepository
     Task<int> GetAuthorBooksTotalCountAsync(int authorId);
     Task<Models.Book?> CreateBookAsync(Models.Book book);
     Task<Models.Book?> UpdateBookAsync(Models.Book book);
+    Task<bool> BookExistsAsync(int bookId);
 }

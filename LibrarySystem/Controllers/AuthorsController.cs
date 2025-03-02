@@ -1,5 +1,6 @@
 ﻿using LibrarySystem.DTOs.Author;
 using LibrarySystem.DTOs.Request;
+using LibrarySystem.Enums;
 using LibrarySystem.Services.Author;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,12 +12,12 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
 {
     private readonly IAuthorService _authorService = authorService;
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetAuthorById")]
     public async Task<IActionResult> GeyByIdAsync(int id)
     {
         var response = await _authorService.GetByIdAsync(id);
 
-        return response.Result != null ? Ok(response) : NotFound(response);
+        return response.Result is not null ? Ok(response) : NotFound(response);
     }
 
     [HttpGet("/books/{bookId}/authors")]
@@ -24,15 +25,15 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
     {
         var response = await _authorService.GetByBookIdAsync(bookId);
 
-        return response.Result != null ? Ok(response) : NotFound(response);
+        return response.Result is not null ? Ok(response) : NotFound(response);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAuthors([FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetAuthorsAsync([FromQuery] PaginationRequest pagination)
     {
         var response = await _authorService.GetAuthorsAsync(pagination);
 
-        return Ok(response);
+        return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
 
     [HttpPost]
@@ -40,7 +41,9 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
     {
         var response = await _authorService.CreateAsync(createDto);
 
-        return Ok(response);
+        return response.Result is not null
+            ? CreatedAtRoute("GetAuthorById", new { id = response.Result.Id }, response)
+            : StatusCode(500, response);
     }
 
     [HttpPut("{id}")]
@@ -48,6 +51,15 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
     {
         var response = await _authorService.UpdateAsync(id, updateDto);
 
-        return response.Result != null ? Ok(response) : NotFound(response);
+        return response.Code switch
+        {
+            ResponseCode.AuthorUpdated when response.Result is not null
+                => Ok(response),
+
+            ResponseCode.AuthorNotFound
+                => NotFound(response),
+
+            _ => StatusCode(500, response),
+        };
     }
 }

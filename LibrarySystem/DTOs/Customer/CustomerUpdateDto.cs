@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LibrarySystem.Constants.ResponseMessages;
+using LibrarySystem.Constants;
 
 namespace LibrarySystem.DTOs.Customer;
 
 public class CustomerUpdateDto
 {
-    [Required(ErrorMessage = CustomerMessages.NameRequired)]
+    [Required(ErrorMessage = ResponseMessages.CustomerNameRequired)]
     public string Name { get; set; }
 }

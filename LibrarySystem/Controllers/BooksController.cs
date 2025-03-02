@@ -1,5 +1,6 @@
 ﻿using LibrarySystem.DTOs.Book;
 using LibrarySystem.DTOs.Request;
+using LibrarySystem.Enums;
 using LibrarySystem.Services.Book;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,7 @@ public class BooksController(IBookService bookService) : ControllerBase
 {
     private readonly IBookService _bookService = bookService;
 
-    [HttpGet("{id}", Name = nameof(GetByIdAsync))]
+    [HttpGet("{id}", Name = "GetBookById")]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
         var response = await _bookService.GetByIdAsync(id);
@@ -40,9 +41,16 @@ public class BooksController(IBookService bookService) : ControllerBase
     {
         var response = await _bookService.CreateBookAsync(dto);
 
-        return response.Result is not null
-            ? CreatedAtRoute(nameof(GetByIdAsync), new { id = response.Result.Id }, response)
-            : BadRequest(response);
+        return response.Code switch
+        {
+            ResponseCode.BookCreated when response.Result is not null
+                => CreatedAtRoute("GetBookById", new { id = response.Result.Id }, response),
+
+            ResponseCode.AuthorNotFoundSome
+                => NotFound(response),
+
+            _ => StatusCode(500, response),
+        };
     }
 
     [HttpPut("{bookId}")]
@@ -50,6 +58,16 @@ public class BooksController(IBookService bookService) : ControllerBase
     {
         var response = await _bookService.UpdateBookAsync(bookId, dto);
 
-        return response.Result is not null ? Ok(response) : NotFound(response);
+        return response.Code switch
+        {
+            ResponseCode.BookUpdated when response.Result is not null
+                => Ok(response),
+
+            ResponseCode.BookNotFound or
+            ResponseCode.AuthorNotFoundSome
+                => NotFound(response),
+
+            _ => StatusCode(500, response),
+        };
     }
 }

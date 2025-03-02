@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LibrarySystem.Constants.ResponseMessages;
+using LibrarySystem.Constants;
 using LibrarySystem.DTOs.Customer;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
@@ -23,12 +23,11 @@ public class CustomerService(
 
         if (customer is null)
         {
-            response.Success = false;
-            response.Message = CustomerMessages.NotFound;
+            _mapper.Map(ResponseStatus.CustomerNotFound, response);
             return response;
         }
-        response.Message = CustomerMessages.Fetched;
-        response.Result  = _mapper.Map<CustomerDto>(customer);
+        _mapper.Map(ResponseStatus.CustomerFetched, response);
+        response.Result = _mapper.Map<CustomerDto>(customer);
         return response;
     }
 
@@ -47,14 +46,14 @@ public class CustomerService(
 
         if (response.Pagination.CurrentPage > response.Pagination.TotalPages)
         {
-            response.Message = CustomerMessages.EmptyPage;
-            response.Result  = [];
+            _mapper.Map(ResponseStatus.CustomerEmptyPage, response);
+            response.Result = [];
             return response;
         }
         var customers = await _customerRepository.GetCustomersAsync(pagination.Page, pagination.PageSize);
 
-        response.Message = CustomerMessages.FetchedMany;
-        response.Result  = _mapper.Map<List<CustomerDto>>(customers);
+        _mapper.Map(ResponseStatus.CustomerFetchedMany, response);
+        response.Result = _mapper.Map<List<CustomerDto>>(customers);
         return response;
     }
 
@@ -64,8 +63,7 @@ public class CustomerService(
 
         if (!IsCpfValid(dto.Cpf))
         {
-            response.Success = false;
-            response.Message = CustomerMessages.InvalidCpf;
+            _mapper.Map(ResponseStatus.InvalidCpf, response);
             return response;
         }
         var customer = _mapper.Map<Models.Customer>(dto);
@@ -73,12 +71,11 @@ public class CustomerService(
 
         if (createdCustomer is null)
         {
-            response.Success = false;
-            response.Message = CustomerMessages.NotCreated;
+            _mapper.Map(ResponseStatus.CustomerNotCreated, response);
             return response;
         }
-        response.Message = CustomerMessages.Created;
-        response.Result  = _mapper.Map<CustomerDto>(customer);
+        _mapper.Map(ResponseStatus.CustomerCreated, response);
+        response.Result = _mapper.Map<CustomerDto>(customer);
         return response;
     }
 
@@ -90,8 +87,7 @@ public class CustomerService(
 
         if (customer is null)
         {
-            response.Success = false;
-            response.Message = CustomerMessages.NotFound;
+            _mapper.Map(ResponseStatus.CustomerNotFound, response);
             return response;
         }
         _mapper.Map(dto, customer);
@@ -99,12 +95,11 @@ public class CustomerService(
 
         if (updatedCustomer is null)
         {
-            response.Success = false;
-            response.Message = CustomerMessages.NotUpdated;
+            _mapper.Map(ResponseStatus.CustomerNotUpdated, response);
             return response;
         }
-        response.Message = CustomerMessages.Updated;
-        response.Result  = _mapper.Map<CustomerDto>(customer);
+        _mapper.Map(ResponseStatus.CustomerUpdated, response);
+        response.Result = _mapper.Map<CustomerDto>(customer);
         return response;
     }
 

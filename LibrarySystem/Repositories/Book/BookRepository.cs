@@ -64,4 +64,9 @@ public class BookRepository(AppDbContext context) : IBookRepository
         var changesCount = await _context.SaveChangesAsync();
         return changesCount > 0 ? book : null;
     }
+
+    public async Task<bool> BookExistsAsync(int bookId)
+    {
+        return await _context.Books.AnyAsync(b => b.Id == bookId);
+    }
 }

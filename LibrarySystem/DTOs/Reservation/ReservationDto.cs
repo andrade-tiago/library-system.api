@@ -9,6 +9,6 @@ public class ReservationDto
     public BookDto Book { get; set; }
     public CustomerDto Customer { get; set; }
     public DateTime CreatedDate { get; set; }
-    public DateTime EndDate { get; set; }
-    public DateTime? ReturnedDate { get; set; }
+    public DateOnly EndDate { get; set; }
+    public DateOnly? ReturnedDate { get; set; }
 }

@@ -61,7 +61,7 @@ public class ReservationsController(IReservationService reservationService) : Co
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromBody] ResevationCreateDto dto)
+    public async Task<IActionResult> CreateAsync([FromBody] ReservationCreateDto dto)
     {
         var response = await _reservationService.CreateAsync(dto);
 

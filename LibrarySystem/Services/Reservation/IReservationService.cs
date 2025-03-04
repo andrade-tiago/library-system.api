@@ -12,6 +12,6 @@ public interface IReservationService
     Task<ApiResponse<List<ReservationDto>>> GetReservationsAsync(PaginationRequest pagination);
     Task<ApiResponse<List<ReservationDto>>> GetReservationsByCustomerAsync(int customerId, PaginationRequest pagination);
     Task<ApiResponse<List<ReservationDto>>> GetReservationsByBookAsync(int bookId, PaginationRequest pagination);
-    Task<ApiResponse<ReservationDto?>> CreateAsync(ResevationCreateDto dto);
+    Task<ApiResponse<ReservationDto?>> CreateAsync(ReservationCreateDto dto);
     Task<ApiResponse<ReservationDto?>> CompleteReservationAsync(int id, ReservationCompleteDto dto);
 }

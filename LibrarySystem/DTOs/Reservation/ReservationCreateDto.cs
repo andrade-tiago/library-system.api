@@ -1,6 +1,6 @@
 ﻿namespace LibrarySystem.DTOs.Reservation;
 
-public class ResevationCreateDto
+public class ReservationCreateDto
 {
     public int BookId { get; set; }
     public int CustomerId { get; set; }

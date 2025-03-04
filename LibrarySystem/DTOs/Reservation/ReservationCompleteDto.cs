@@ -4,5 +4,5 @@ namespace LibrarySystem.DTOs.Reservation;
 
 public class ReservationCompleteDto
 {
-    public DateTime? ReturnedDate { get; set; }
+    public DateOnly? ReturnedDate { get; set; }
 }

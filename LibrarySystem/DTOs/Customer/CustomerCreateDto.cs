@@ -12,5 +12,5 @@ public class CustomerCreateDto
     public string Cpf { get; set; }
 
     [Required(ErrorMessage = ResponseMessages.CustomerBirthDateRequired)]
-    public DateTime BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
 }

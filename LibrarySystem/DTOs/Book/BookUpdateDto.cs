@@ -9,7 +9,7 @@ public class BookUpdateDto
     public string Title { get; set; }
 
     [Required(ErrorMessage = ResponseMessages.BookReleaseDateRequired)]
-    public DateTime ReleaseDate { get; set; }
+    public DateOnly ReleaseDate { get; set; }
 
     [Required(ErrorMessage = ResponseMessages.BookAuthorsRequired)]
     [MinLength(1, ErrorMessage = ResponseMessages.BookAuthorsRequired)]

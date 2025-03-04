@@ -178,7 +178,7 @@ public class ReservationService(
         return response;
     }
 
-    public async Task<ApiResponse<ReservationDto?>> CreateAsync(ResevationCreateDto dto)
+    public async Task<ApiResponse<ReservationDto?>> CreateAsync(ReservationCreateDto dto)
     {
         ApiResponse<ReservationDto?> response = new();
 
@@ -210,7 +210,7 @@ public class ReservationService(
             return response;
         }
 
-        var today = DateTime.UtcNow.Date;
+        var today = DateOnly.FromDateTime(DateTime.UtcNow.Date);
         var reservation = new Models.Reservation
         {
             Customer    = customer,
@@ -247,7 +247,7 @@ public class ReservationService(
             return response;
         }
 
-        var today = DateTime.UtcNow.Date;
+        var today = DateOnly.FromDateTime(DateTime.UtcNow.Date);
         if (dto.ReturnedDate is not null)
         {
             if (dto.ReturnedDate > today)

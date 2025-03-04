@@ -1,8 +1,7 @@
-﻿using LibrarySystem.DTOs.BookReservation;
+﻿using LibrarySystem.DTOs.Reservation;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.Enums;
 using LibrarySystem.Services.Reservation;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Controllers;
@@ -62,7 +61,7 @@ public class ReservationsController(IReservationService reservationService) : Co
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromBody] BookResevationCreateDto dto)
+    public async Task<IActionResult> CreateAsync([FromBody] ResevationCreateDto dto)
     {
         var response = await _reservationService.CreateAsync(dto);
 

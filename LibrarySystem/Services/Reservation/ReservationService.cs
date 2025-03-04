@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using LibrarySystem.Constants;
-using LibrarySystem.DTOs.BookReservation;
+using LibrarySystem.DTOs.Reservation;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
 using LibrarySystem.Repositories.Book;
@@ -24,9 +24,9 @@ public class ReservationService(
     private readonly IMapper _mapper = mapper;
     private readonly int _expirationDays = options.Value.ExpirationDays;
 
-    public async Task<ApiResponse<BookReservationDto?>> GetByIdAsync(int id)
+    public async Task<ApiResponse<ReservationDto?>> GetByIdAsync(int id)
     {
-        ApiResponse<BookReservationDto?> response = new();
+        ApiResponse<ReservationDto?> response = new();
 
         var bookReservation = await _bookReservationRepository.GetByIdAsync(id);
 
@@ -36,13 +36,13 @@ public class ReservationService(
             return response;
         }
         _mapper.Map(ResponseStatus.ReservationFetched, response);
-        response.Result = _mapper.Map<BookReservationDto>(bookReservation);
+        response.Result = _mapper.Map<ReservationDto>(bookReservation);
         return response;
     }
 
-    public async Task<ApiResponse<BookReservationDto?>> GetLastByCustomerAsync(int customerId)
+    public async Task<ApiResponse<ReservationDto?>> GetLastByCustomerAsync(int customerId)
     {
-        ApiResponse<BookReservationDto?> response = new();
+        ApiResponse<ReservationDto?> response = new();
 
         var customerExists = await _customerRepository.CustomerExistsAsync(customerId);
         if (!customerExists)
@@ -59,13 +59,13 @@ public class ReservationService(
         }
 
         _mapper.Map(ResponseStatus.ReservationFetched, response);
-        response.Result = _mapper.Map<BookReservationDto>(reservation);
+        response.Result = _mapper.Map<ReservationDto>(reservation);
         return response;
     }
 
-    public async Task<ApiResponse<BookReservationDto?>> GetLastByBookAsync(int bookId)
+    public async Task<ApiResponse<ReservationDto?>> GetLastByBookAsync(int bookId)
     {
-        ApiResponse<BookReservationDto?> response = new();
+        ApiResponse<ReservationDto?> response = new();
 
         var bookExists = await _bookRepository.BookExistsAsync(bookId);
         if (!bookExists)
@@ -82,13 +82,13 @@ public class ReservationService(
         }
 
         _mapper.Map(ResponseStatus.ReservationFetched, response);
-        response.Result = _mapper.Map<BookReservationDto>(reservation);
+        response.Result = _mapper.Map<ReservationDto>(reservation);
         return response;
     }
 
-    public async Task<ApiResponse<List<BookReservationDto>>> GetReservationsAsync(PaginationRequest pagination)
+    public async Task<ApiResponse<List<ReservationDto>>> GetReservationsAsync(PaginationRequest pagination)
     {
-        ApiResponse<List<BookReservationDto>> response = new();
+        ApiResponse<List<ReservationDto>> response = new();
 
         var reservationTotalCount = await _bookReservationRepository.CountAsync();
 
@@ -108,13 +108,13 @@ public class ReservationService(
         var reservations = await _bookReservationRepository.GetReservationsAsync(pagination.Page, pagination.PageSize);
 
         _mapper.Map(ResponseStatus.ReservationFetchedMany, response);
-        response.Result = _mapper.Map<List<BookReservationDto>>(reservations);
+        response.Result = _mapper.Map<List<ReservationDto>>(reservations);
         return response;
     }
 
-    public async Task<ApiResponse<List<BookReservationDto>>> GetReservationsByCustomerAsync(int customerId, PaginationRequest pagination)
+    public async Task<ApiResponse<List<ReservationDto>>> GetReservationsByCustomerAsync(int customerId, PaginationRequest pagination)
     {
-        ApiResponse<List<BookReservationDto>> response = new();
+        ApiResponse<List<ReservationDto>> response = new();
 
         var customerExists = await _customerRepository.CustomerExistsAsync(customerId);
         if (!customerExists)
@@ -141,13 +141,13 @@ public class ReservationService(
             .GetReservationsByCustomerAsync(customerId, pagination.Page, pagination.PageSize);
 
         _mapper.Map(ResponseStatus.ReservationFetchedMany, response);
-        response.Result = _mapper.Map<List<BookReservationDto>>(reservations);
+        response.Result = _mapper.Map<List<ReservationDto>>(reservations);
         return response;
     }
 
-    public async Task<ApiResponse<List<BookReservationDto>>> GetReservationsByBookAsync(int bookId, PaginationRequest pagination)
+    public async Task<ApiResponse<List<ReservationDto>>> GetReservationsByBookAsync(int bookId, PaginationRequest pagination)
     {
-        ApiResponse<List<BookReservationDto>> response = new();
+        ApiResponse<List<ReservationDto>> response = new();
 
         var bookExists = await _bookRepository.BookExistsAsync(bookId);
         if (!bookExists)
@@ -174,13 +174,13 @@ public class ReservationService(
             .GetReservationsByBookAsync(bookId, pagination.Page, pagination.PageSize);
 
         _mapper.Map(ResponseStatus.ReservationFetchedMany, response);
-        response.Result = _mapper.Map<List<BookReservationDto>>(reservations);
+        response.Result = _mapper.Map<List<ReservationDto>>(reservations);
         return response;
     }
 
-    public async Task<ApiResponse<BookReservationDto?>> CreateAsync(BookResevationCreateDto dto)
+    public async Task<ApiResponse<ReservationDto?>> CreateAsync(ResevationCreateDto dto)
     {
-        ApiResponse<BookReservationDto?> response = new();
+        ApiResponse<ReservationDto?> response = new();
 
         var customer = await _customerRepository.GetByIdAsync(dto.CustomerId);
         if (customer is null)
@@ -211,7 +211,7 @@ public class ReservationService(
         }
 
         var today = DateTime.UtcNow.Date;
-        var reservation = new Models.BookReservation
+        var reservation = new Models.Reservation
         {
             Customer    = customer,
             Book        = book,
@@ -226,13 +226,13 @@ public class ReservationService(
             return response;
         }
         _mapper.Map(ResponseStatus.ReservationCreated, response);
-        response.Result = _mapper.Map<BookReservationDto>(createdReservation);
+        response.Result = _mapper.Map<ReservationDto>(createdReservation);
         return response;
     }
 
-    public async Task<ApiResponse<BookReservationDto?>> CompleteReservationAsync(int id, ReservationCompleteDto dto)
+    public async Task<ApiResponse<ReservationDto?>> CompleteReservationAsync(int id, ReservationCompleteDto dto)
     {
-        ApiResponse<BookReservationDto?> response = new();
+        ApiResponse<ReservationDto?> response = new();
 
         var reservation = await _bookReservationRepository.GetByIdAsync(id);
         if (reservation is null)
@@ -273,7 +273,7 @@ public class ReservationService(
             : ResponseStatus.ReservationCompletedLate;
 
         _mapper.Map(successResponseStatus, response);
-        response.Result = _mapper.Map<BookReservationDto>(updatedReservation);
+        response.Result = _mapper.Map<ReservationDto>(updatedReservation);
         return response;
     }
 }

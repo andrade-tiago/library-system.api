@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LibrarySystem.DTOs.BookReservation;
+namespace LibrarySystem.DTOs.Reservation;
 
 public class ReservationCompleteDto
 {

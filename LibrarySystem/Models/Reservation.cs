@@ -1,6 +1,6 @@
 ﻿namespace LibrarySystem.Models;
 
-public class BookReservation
+public class Reservation
 {
     public int Id { get; set; }
     public Book Book { get; set; }

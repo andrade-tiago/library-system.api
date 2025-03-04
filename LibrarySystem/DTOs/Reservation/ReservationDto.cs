@@ -1,9 +1,9 @@
 ﻿using LibrarySystem.DTOs.Book;
 using LibrarySystem.DTOs.Customer;
 
-namespace LibrarySystem.DTOs.BookReservation;
+namespace LibrarySystem.DTOs.Reservation;
 
-public class BookReservationDto
+public class ReservationDto
 {
     public int Id { get; set; }
     public BookDto Book { get; set; }

@@ -47,5 +47,22 @@ public static class ResponseMessages
 
     // Request Messages
     public const string RequestInvalidData = "Invalid data";
+
+    // Reservation Messages
+    public const string ReservationBookIdRequired = "Reservation book is required";
+    public const string ReservationCustomerIdRequired = "Reservation customer is required";
+    public const string ReservationNotFound = "Reservation not found";
+    public const string ReservationFetched = "Reservation fetched successfully";
+    public const string ReservationFetchedMany = "Reservations fetched successfully";
+    public const string ReservationEmptyPage = "No reservation found for this page";
+    public const string ReservationCompleted = "Book returned successfully";
+    public const string ReservationNotCompleted = "Error returning book";
+    public const string ReservationCreated = "Reservation created successfully";
+    public const string ReservationNotCreated = "Error creating reservation";
+    public const string OpenCustomerReservation = "Customer still has an open reservation";
+    public const string OpenBookReservation = "Book is already reserved";
+    public const string ReservationCompletedLate = "Book returned successfully (late)";
+    public const string ReservationCompleteLaterThanToday = "Book return date cannot be later than today";
+    public const string ReservationAlreadyCompleted = "Reservation already completed";
 }
 

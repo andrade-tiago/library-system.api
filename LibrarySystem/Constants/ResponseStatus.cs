@@ -72,4 +72,21 @@ public class ResponseStatus
 
     // Request Messages
     public static readonly ResponseStatus RequestInvalidData = new(false, ResponseCode.RequestInvalidData, ResponseMessages.RequestInvalidData);
+
+    // Reservation Messages
+    public static readonly ResponseStatus ReservationBookIdRequired = new(false, ResponseCode.ReservationBookIdRequired, ResponseMessages.ReservationBookIdRequired);
+    public static readonly ResponseStatus ReservationCustomerIdRequired = new(false, ResponseCode.ReservationCustomerIdRequired, ResponseMessages.ReservationCustomerIdRequired);
+    public static readonly ResponseStatus ReservationNotFound = new(false, ResponseCode.ReservationNotFound, ResponseMessages.ReservationNotFound);
+    public static readonly ResponseStatus ReservationFetched = new(true, ResponseCode.ReservationFetched, ResponseMessages.ReservationFetched);
+    public static readonly ResponseStatus ReservationFetchedMany = new(true, ResponseCode.ReservationFetchedMany, ResponseMessages.ReservationFetchedMany);
+    public static readonly ResponseStatus ReservationEmptyPage = new(true, ResponseCode.ReservationEmptyPage, ResponseMessages.ReservationEmptyPage);
+    public static readonly ResponseStatus ReservationCompleted = new(true, ResponseCode.ReservationCompleted, ResponseMessages.ReservationCompleted);
+    public static readonly ResponseStatus ReservationNotCompleted = new(false, ResponseCode.ReservationNotCompleted, ResponseMessages.ReservationNotCompleted);
+    public static readonly ResponseStatus ReservationCreated = new(true, ResponseCode.ReservationCreated, ResponseMessages.ReservationCreated);
+    public static readonly ResponseStatus ReservationNotCreated = new(false, ResponseCode.ReservationNotCreated, ResponseMessages.ReservationNotCreated);
+    public static readonly ResponseStatus OpenCustomerReservation = new(false, ResponseCode.OpenCustomerReservation, ResponseMessages.OpenCustomerReservation);
+    public static readonly ResponseStatus OpenBookReservation = new(false, ResponseCode.OpenBookReservation, ResponseMessages.OpenBookReservation);
+    public static readonly ResponseStatus ReservationCompletedLate = new(true, ResponseCode.ReservationCompletedLate, ResponseMessages.ReservationCompletedLate);
+    public static readonly ResponseStatus ReservationCompleteLaterThanToday = new(false, ResponseCode.ReservationCompleteLaterThanToday, ResponseMessages.ReservationCompleteLaterThanToday);
+    public static readonly ResponseStatus ReservationAlreadyCompleted = new(false, ResponseCode.ReservationAlreadyCompleted, ResponseMessages.ReservationAlreadyCompleted);
 }

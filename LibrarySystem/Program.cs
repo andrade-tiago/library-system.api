@@ -1,4 +1,5 @@
 using DotNetEnv;
+using LibrarySystem.Constants;
 using LibrarySystem.Data;
 using LibrarySystem.Filters;
 using LibrarySystem.Mappers;
@@ -6,9 +7,11 @@ using LibrarySystem.Middlewares;
 using LibrarySystem.Repositories.Author;
 using LibrarySystem.Repositories.Book;
 using LibrarySystem.Repositories.Customer;
+using LibrarySystem.Repositories.Reservation;
 using LibrarySystem.Services.Author;
 using LibrarySystem.Services.Book;
 using LibrarySystem.Services.Customer;
+using LibrarySystem.Services.Reservation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,14 +26,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
 
 builder.Services.AddAutoMapper(typeof(AuthorProfile));
 builder.Services.AddAutoMapper(typeof(BookProfile));
 builder.Services.AddAutoMapper(typeof(CustomerProfile));
+builder.Services.AddAutoMapper(typeof(ReservationProfile));
 builder.Services.AddAutoMapper(typeof(ApiResponseProfile));
 
 if (builder.Environment.IsDevelopment())
@@ -48,6 +54,11 @@ if (string.IsNullOrEmpty(connectionString))
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseNpgsql(connectionString)
 );
+
+builder.Services.Configure<ReservationSettings>(
+    builder.Configuration.GetSection("ReservationSettings")
+);
+
 
 var app = builder.Build();
 

@@ -7,4 +7,5 @@ public interface ICustomerRepository
     Task<int> CountAsync();
     Task<Models.Customer?> CreateAsync(Models.Customer customer);
     Task<Models.Customer?> UpdateAsync(Models.Customer customer);
+    Task<bool> CustomerExistsAsync(int customerId);
 } 

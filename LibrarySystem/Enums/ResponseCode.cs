@@ -47,4 +47,21 @@ public enum ResponseCode
 
     // Request
     RequestInvalidData = 5000,
+
+    // Reservation
+    ReservationBookIdRequired = 6000,
+    ReservationCustomerIdRequired = 6001,
+    ReservationNotFound = 6002,
+    ReservationFetched = 6003,
+    ReservationFetchedMany = 6004,
+    ReservationEmptyPage = 6005,
+    ReservationCompleted = 6006,
+    ReservationNotCompleted = 6007,
+    ReservationCreated = 6008,
+    ReservationNotCreated = 6009,
+    OpenCustomerReservation = 6010,
+    OpenBookReservation = 6011,
+    ReservationCompletedLate = 6012,
+    ReservationCompleteLaterThanToday = 6013,
+    ReservationAlreadyCompleted = 6014,
 }

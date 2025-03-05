@@ -72,6 +72,7 @@ public class ResponseStatus
 
     // Request Messages
     public static readonly ResponseStatus RequestInvalidData = new(false, ResponseCode.RequestInvalidData, ResponseMessages.RequestInvalidData);
+    public static readonly ResponseStatus ValidationErrors = new(false, ResponseCode.ValidationErrors, ResponseMessages.ValidationErrors);
 
     // Reservation Messages
     public static readonly ResponseStatus ReservationBookIdRequired = new(false, ResponseCode.ReservationBookIdRequired, ResponseMessages.ReservationBookIdRequired);

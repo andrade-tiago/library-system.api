@@ -47,6 +47,7 @@ public enum ResponseCode
 
     // Request
     RequestInvalidData = 5000,
+    ValidationErrors = 5001,
 
     // Reservation
     ReservationBookIdRequired = 6000,

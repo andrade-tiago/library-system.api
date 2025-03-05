@@ -47,6 +47,7 @@ public static class ResponseMessages
 
     // Request Messages
     public const string RequestInvalidData = "Invalid data";
+    public const string ValidationErrors = "Validation errors";
 
     // Reservation Messages
     public const string ReservationBookIdRequired = "Reservation book is required";

@@ -3,7 +3,6 @@ using LibrarySystem.Constants;
 using LibrarySystem.Data;
 using LibrarySystem.Filters;
 using LibrarySystem.Mappers;
-using LibrarySystem.Middlewares;
 using LibrarySystem.Repositories.Author;
 using LibrarySystem.Repositories.Book;
 using LibrarySystem.Repositories.Customer;
@@ -12,13 +11,14 @@ using LibrarySystem.Services.Author;
 using LibrarySystem.Services.Book;
 using LibrarySystem.Services.Customer;
 using LibrarySystem.Services.Reservation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add<ValidationFilter>();
+    options.Filters.Add<ModelStateFilter>();
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -58,11 +58,13 @@ builder.Services.AddDbContext<AppDbContext>(
 builder.Services.Configure<ReservationSettings>(
     builder.Configuration.GetSection("ReservationSettings")
 );
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 
 var app = builder.Build();
-
-app.UseMiddleware<ValidationMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

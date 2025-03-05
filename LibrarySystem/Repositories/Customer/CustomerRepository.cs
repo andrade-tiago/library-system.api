@@ -12,6 +12,11 @@ public class CustomerRepository(AppDbContext context) : ICustomerRepository
         return await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
     }
 
+    public async Task<Models.Customer?> GetByCpfAsync(string cpf)
+    {
+        return await _context.Customers.FirstOrDefaultAsync(c => c.CPF == cpf);
+    }
+
     public async Task<List<Models.Customer>> GetCustomersAsync(int page, int pageSize)
     {
         int skipCount = (page - 1) * pageSize;

@@ -3,6 +3,7 @@
 public interface ICustomerRepository
 {
     Task<Models.Customer?> GetByIdAsync(int id);
+    Task<Models.Customer?> GetByCpfAsync(string cpf);
     Task<List<Models.Customer>> GetCustomersAsync(int page, int pageSize);
     Task<int> CountAsync();
     Task<Models.Customer?> CreateAsync(Models.Customer customer);

@@ -31,6 +31,27 @@ public class CustomerService(
         return response;
     }
 
+    public async Task<ApiResponse<CustomerDto?>> GetByCpfAsync(string cpf)
+    {
+        ApiResponse<CustomerDto?> response = new();
+
+        if (!IsCpfValid(cpf))
+        {
+            _mapper.Map(ResponseStatus.InvalidCpf, response);
+            return response;
+        }
+        var customer = await _customerRepository.GetByCpfAsync(cpf);
+
+        if (customer is null)
+        {
+            _mapper.Map(ResponseStatus.CustomerNotFound, response);
+            return response;
+        }
+        _mapper.Map(ResponseStatus.CustomerFetched, response);
+        response.Result = _mapper.Map<CustomerDto>(customer);
+        return response;
+    }
+
     public async Task<ApiResponse<List<CustomerDto>>> GetCustomersAsync(PaginationRequest pagination)
     {
         ApiResponse<List<CustomerDto>> response = new();

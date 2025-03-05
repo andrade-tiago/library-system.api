@@ -20,6 +20,19 @@ public class CustomersController(ICustomerService customerService) : ControllerB
         return response.Result is not null ? Ok(response) : NotFound(response);
     }
 
+    [HttpGet("by-cpf/{cpf}")]
+    public async Task<IActionResult> GetByCpfAsync(string cpf)
+    {
+        var response = await _customerService.GetByCpfAsync(cpf);
+
+        return response.Code switch
+        {
+            ResponseCode.CustomerFetched => Ok(response),
+            ResponseCode.InvalidCpf => BadRequest(response),
+            _ => NotFound(response),
+        };
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetCustomersAsync([FromQuery] PaginationRequest pagination)
     {

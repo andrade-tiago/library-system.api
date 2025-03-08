@@ -77,11 +77,6 @@ public class AuthorService(
         return response;
     }
 
-    public async Task<List<Models.Author>> GetByIdsAsync(IEnumerable<int> authorIds)
-    {
-        return await _authorRepository.GetByIdsAsync(authorIds);
-    }
-
     public async Task<ApiResponse<AuthorDto>> CreateAsync(AuthorCreateDto createDto)
     {
         ApiResponse<AuthorDto> response = new();
@@ -120,10 +115,5 @@ public class AuthorService(
         _mapper.Map(ResponseStatus.AuthorUpdated, response);
         response.Result = _mapper.Map<AuthorDto>(author);
         return response;
-    }
-
-    public async Task<bool> AuthorExistsAsync(int authorId)
-    {
-        return await _authorRepository.AuthorExistsAsync(authorId);
     }
 }

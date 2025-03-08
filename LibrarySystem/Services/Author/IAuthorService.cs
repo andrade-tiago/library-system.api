@@ -11,7 +11,4 @@ public interface IAuthorService
     Task<ApiResponse<List<AuthorDto>>> GetAuthorsAsync(PaginationRequest pagination);
     Task<ApiResponse<AuthorDto>> CreateAsync(AuthorCreateDto createDto);
     Task<ApiResponse<AuthorDto?>> UpdateAsync(int id, AuthorUpdateDto updateDto);
-
-    Task<bool> AuthorExistsAsync(int authorId);
-    Task<List<Models.Author>> GetByIdsAsync(IEnumerable<int> authorIds);
 }

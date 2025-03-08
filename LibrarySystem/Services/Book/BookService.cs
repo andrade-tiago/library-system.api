@@ -3,19 +3,19 @@ using LibrarySystem.Constants;
 using LibrarySystem.DTOs.Book;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
+using LibrarySystem.Repositories.Author;
 using LibrarySystem.Repositories.Book;
-using LibrarySystem.Services.Author;
 
 namespace LibrarySystem.Services.Book;
 
 public class BookService(
     IBookRepository bookRepository,
-    IAuthorService authorService,
+    IAuthorRepository authorRepository,
     IMapper mapper
 ) : IBookService
 {
     private readonly IBookRepository _bookRepository = bookRepository;
-    private readonly IAuthorService _authorService = authorService;
+    private readonly IAuthorRepository _authorRepository = authorRepository;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ApiResponse<BookDto?>> GetByIdAsync(int id)
@@ -64,7 +64,7 @@ public class BookService(
     {
         ApiResponse<List<BookDto>?> response = new();
 
-        var authorExists = await _authorService.AuthorExistsAsync(authorId);
+        var authorExists = await _authorRepository.AuthorExistsAsync(authorId);
 
         if (!authorExists)
         {
@@ -102,7 +102,7 @@ public class BookService(
     {
         ApiResponse<BookDto?> response = new();
 
-        var authors = await _authorService.GetByIdsAsync(dto.AuthorIds);
+        var authors = await _authorRepository.GetByIdsAsync(dto.AuthorIds);
 
         if (authors.Count != dto.AuthorIds.Count)
         {
@@ -146,7 +146,7 @@ public class BookService(
         var authorIdsToAdd = dto.AuthorIds.Except(currentAuthorIds).ToHashSet();
         if (authorIdsToAdd.Count > 0)
         {
-            var authorsToAdd = await _authorService.GetByIdsAsync(authorIdsToAdd);
+            var authorsToAdd = await _authorRepository.GetByIdsAsync(authorIdsToAdd);
 
             if (authorsToAdd.Count != authorIdsToAdd.Count)
             {
@@ -166,10 +166,5 @@ public class BookService(
         _mapper.Map(ResponseStatus.BookUpdated, response);
         response.Result = _mapper.Map<BookDto>(book);
         return response;
-    }
-
-    public async Task<bool> BookExistsAsync(int bookId)
-    {
-        return await _bookRepository.BookExistsAsync(bookId);
     }
 }

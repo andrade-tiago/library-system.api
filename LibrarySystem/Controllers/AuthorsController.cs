@@ -1,6 +1,7 @@
 ﻿using LibrarySystem.DTOs.Author;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.Enums;
+using LibrarySystem.Filters;
 using LibrarySystem.Services.Author;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +14,8 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
     private readonly IAuthorService _authorService = authorService;
 
     [HttpGet("{id}", Name = "GetAuthorById")]
-    public async Task<IActionResult> GeyByIdAsync(int id)
+    [ValidateIdFilter]
+    public async Task<IActionResult> GetByIdAsync(int id)
     {
         var response = await _authorService.GetByIdAsync(id);
 
@@ -21,6 +23,7 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
     }
 
     [HttpGet("/books/{bookId}/authors")]
+    [ValidateIdFilter(nameof(bookId))]
     public async Task<IActionResult> GetByBookIdAsync(int bookId)
     {
         var response = await _authorService.GetByBookIdAsync(bookId);
@@ -47,6 +50,7 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [ValidateIdFilter]
     public async Task<IActionResult> UpdateAsync(int id, [FromBody] AuthorUpdateDto updateDto)
     {
         var response = await _authorService.UpdateAsync(id, updateDto);

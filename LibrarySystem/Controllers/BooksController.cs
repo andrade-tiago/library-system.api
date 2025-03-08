@@ -1,6 +1,7 @@
 ﻿using LibrarySystem.DTOs.Book;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.Enums;
+using LibrarySystem.Filters;
 using LibrarySystem.Services.Book;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ public class BooksController(IBookService bookService) : ControllerBase
     private readonly IBookService _bookService = bookService;
 
     [HttpGet("{id}", Name = "GetBookById")]
+    [ValidateIdFilter]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
         var response = await _bookService.GetByIdAsync(id);
@@ -29,8 +31,9 @@ public class BooksController(IBookService bookService) : ControllerBase
     }
 
     [HttpGet("/authors/{authorId}/books")]
+    [ValidateIdFilter(nameof(authorId))]
     public async Task<IActionResult> GetByAuthorIdAsync(int authorId, [FromQuery] PaginationRequest pagination)
-    {
+    { 
         var response = await _bookService.GetByAuthorIdAsync(authorId, pagination);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
@@ -53,10 +56,11 @@ public class BooksController(IBookService bookService) : ControllerBase
         };
     }
 
-    [HttpPut("{bookId}")]
-    public async Task<IActionResult> UpdateBookAsync(int bookId, BookUpdateDto dto)
+    [HttpPut("{id}")]
+    [ValidateIdFilter]
+    public async Task<IActionResult> UpdateBookAsync(int id, BookUpdateDto dto)
     {
-        var response = await _bookService.UpdateBookAsync(bookId, dto);
+        var response = await _bookService.UpdateBookAsync(id, dto);
 
         return response.Code switch
         {

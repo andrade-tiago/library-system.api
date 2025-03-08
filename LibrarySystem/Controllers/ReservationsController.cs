@@ -1,6 +1,7 @@
 ﻿using LibrarySystem.DTOs.Reservation;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.Enums;
+using LibrarySystem.Filters;
 using LibrarySystem.Services.Reservation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ public class ReservationsController(IReservationService reservationService) : Co
     private readonly IReservationService _reservationService = reservationService;
 
     [HttpGet("{id}", Name = "GetReservationById")]
+    [ValidateIdFilter]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
         var response = await _reservationService.GetByIdAsync(id);
@@ -21,6 +23,7 @@ public class ReservationsController(IReservationService reservationService) : Co
     }
 
     [HttpGet("/customers/{customerId}/reservations/last")]
+    [ValidateIdFilter(nameof(customerId))]
     public async Task<IActionResult> GetLastByCustomerAsync(int customerId)
     {
         var response = await _reservationService.GetLastByCustomerAsync(customerId);
@@ -29,6 +32,7 @@ public class ReservationsController(IReservationService reservationService) : Co
     }
 
     [HttpGet("/books/{bookId}/reservations/last")]
+    [ValidateIdFilter(nameof(bookId))]
     public async Task<IActionResult> GetLastByBookAsync(int bookId)
     {
         var response = await _reservationService.GetLastByBookAsync(bookId);
@@ -45,6 +49,7 @@ public class ReservationsController(IReservationService reservationService) : Co
     }
 
     [HttpGet("/customers/{customerId}/reservations")]
+    [ValidateIdFilter(nameof(customerId))]
     public async Task<IActionResult> GetReservationsByCustomerAsync(int customerId, [FromQuery] PaginationRequest pagination)
     {
         var response = await _reservationService.GetReservationsByCustomerAsync(customerId, pagination);
@@ -53,6 +58,7 @@ public class ReservationsController(IReservationService reservationService) : Co
     }
 
     [HttpGet("/books/{bookId}/reservations")]
+    [ValidateIdFilter(nameof(bookId))]
     public async Task<IActionResult> GetReservationsByBookAsync(int bookId, [FromQuery] PaginationRequest pagination)
     {
         var response = await _reservationService.GetReservationsByBookAsync(bookId, pagination);
@@ -81,6 +87,7 @@ public class ReservationsController(IReservationService reservationService) : Co
     }
 
     [HttpPatch("{id}/complete")]
+    [ValidateIdFilter]
     public async Task<IActionResult> CompleteReservationAsync(int id, ReservationCompleteDto dto)
     {
         var response = await _reservationService.CompleteReservationAsync(id, dto);

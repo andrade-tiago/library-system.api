@@ -1,6 +1,7 @@
 ﻿using LibrarySystem.DTOs.Customer;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.Enums;
+using LibrarySystem.Filters;
 using LibrarySystem.Services.Customer;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ public class CustomersController(ICustomerService customerService) : ControllerB
     private readonly ICustomerService _customerService = customerService;
 
     [HttpGet("{id}", Name = "GetCustomerById")]
+    [ValidateIdFilter]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
         var response = await _customerService.GetByIdAsync(id);
@@ -59,6 +61,7 @@ public class CustomersController(ICustomerService customerService) : ControllerB
     }
 
     [HttpPut("{id}")]
+    [ValidateIdFilter]
     public async Task<IActionResult> UpdateAsync(int id, [FromBody] CustomerUpdateDto dto)
     {
         var response = await _customerService.UpdateAsync(id, dto);

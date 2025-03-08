@@ -48,6 +48,7 @@ public static class ResponseMessages
     // Request Messages
     public const string RequestInvalidData = "Invalid data";
     public const string ValidationErrors = "Validation errors";
+    public const string IdOutOfRange = "Id must be greater than zero";
 
     // Reservation Messages
     public const string ReservationBookIdRequired = "Reservation book is required";

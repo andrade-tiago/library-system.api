@@ -22,7 +22,7 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
         return response.Result is not null ? Ok(response) : NotFound(response);
     }
 
-    [HttpGet("/books/{bookId}/authors")]
+    [HttpGet("/api/books/{bookId}/authors")]
     [ValidateIdFilter(nameof(bookId))]
     public async Task<IActionResult> GetByBookIdAsync(int bookId)
     {

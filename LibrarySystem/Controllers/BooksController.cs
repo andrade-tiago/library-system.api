@@ -30,7 +30,7 @@ public class BooksController(IBookService bookService) : ControllerBase
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
 
-    [HttpGet("/authors/{authorId}/books")]
+    [HttpGet("/api/authors/{authorId}/books")]
     [ValidateIdFilter(nameof(authorId))]
     public async Task<IActionResult> GetByAuthorIdAsync(int authorId, [FromQuery] PaginationRequest pagination)
     { 

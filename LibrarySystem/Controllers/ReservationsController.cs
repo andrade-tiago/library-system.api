@@ -22,7 +22,7 @@ public class ReservationsController(IReservationService reservationService) : Co
         return response.Result is not null ? Ok(response) : NotFound(response);
     }
 
-    [HttpGet("/customers/{customerId}/reservations/last")]
+    [HttpGet("/api/customers/{customerId}/reservations/last")]
     [ValidateIdFilter(nameof(customerId))]
     public async Task<IActionResult> GetLastByCustomerAsync(int customerId)
     {
@@ -31,7 +31,7 @@ public class ReservationsController(IReservationService reservationService) : Co
         return response.Result is not null ? Ok(response) : NotFound(response);
     }
 
-    [HttpGet("/books/{bookId}/reservations/last")]
+    [HttpGet("/api/books/{bookId}/reservations/last")]
     [ValidateIdFilter(nameof(bookId))]
     public async Task<IActionResult> GetLastByBookAsync(int bookId)
     {
@@ -48,7 +48,7 @@ public class ReservationsController(IReservationService reservationService) : Co
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
 
-    [HttpGet("/customers/{customerId}/reservations")]
+    [HttpGet("/api/customers/{customerId}/reservations")]
     [ValidateIdFilter(nameof(customerId))]
     public async Task<IActionResult> GetReservationsByCustomerAsync(int customerId, [FromQuery] PaginationRequest pagination)
     {
@@ -57,7 +57,7 @@ public class ReservationsController(IReservationService reservationService) : Co
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
 
-    [HttpGet("/books/{bookId}/reservations")]
+    [HttpGet("/api/books/{bookId}/reservations")]
     [ValidateIdFilter(nameof(bookId))]
     public async Task<IActionResult> GetReservationsByBookAsync(int bookId, [FromQuery] PaginationRequest pagination)
     {

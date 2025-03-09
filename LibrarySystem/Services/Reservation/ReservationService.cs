@@ -170,7 +170,7 @@ public class ReservationService(
             response.Result = [];
             return response;
         }
-        var reservations = _reservationRepository
+        var reservations = await _reservationRepository
             .GetReservationsByBookAsync(bookId, pagination.Page, pagination.PageSize);
 
         _mapper.Map(ResponseStatus.ReservationFetchedMany, response);

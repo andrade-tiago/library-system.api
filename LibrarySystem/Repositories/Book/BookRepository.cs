@@ -1,6 +1,4 @@
-﻿
-using LibrarySystem.Data;
-using LibrarySystem.Models;
+﻿using LibrarySystem.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibrarySystem.Repositories.Book;
@@ -21,6 +19,7 @@ public class BookRepository(AppDbContext context) : IBookRepository
         int skipCount = (page - 1) * pageSize;
 
         return await _context.Books
+            .OrderByDescending(b => b.Id)
             .Include(b => b.Authors)
             .Skip(skipCount)
             .Take(pageSize)
@@ -32,6 +31,7 @@ public class BookRepository(AppDbContext context) : IBookRepository
         var skipCount = (page - 1) * pageSize;
 
         return await _context.Books
+            .OrderByDescending(b => b.Id)
             .Include(b => b.Authors)
             .Where(b => b.Authors.Any(a => a.Id == authorId))
             .Skip(skipCount)

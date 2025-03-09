@@ -22,6 +22,7 @@ public class CustomerRepository(AppDbContext context) : ICustomerRepository
         int skipCount = (page - 1) * pageSize;
 
         return await _context.Customers
+            .OrderByDescending(b => b.Id)
             .Skip(skipCount)
             .Take(pageSize)
             .ToListAsync();

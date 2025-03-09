@@ -20,6 +20,7 @@ public class AuthorRepository : IAuthorRepository
     public async Task<List<Models.Author>> GetByIdsAsync(IEnumerable<int> authorIds)
     {
         return await _context.Authors
+            .OrderByDescending(a => a.Id)
             .Where(a => authorIds.Contains(a.Id))
             .ToListAsync();
     }
@@ -27,6 +28,7 @@ public class AuthorRepository : IAuthorRepository
     public async Task<List<Models.Author>?> GetByBookIdAsync(int bookId)
     {
         return await _context.Authors
+            .OrderByDescending(a => a.Id)
             .Include(a => a.Books)
             .Where(a => a.Books.Any(b => b.Id == bookId))
             .ToListAsync();
@@ -37,6 +39,7 @@ public class AuthorRepository : IAuthorRepository
         int skipCount = (page - 1) * pageSize;
 
         return await _context.Authors
+            .OrderByDescending(a => a.Id)
             .Skip(skipCount)
             .Take(pageSize)
             .ToListAsync();

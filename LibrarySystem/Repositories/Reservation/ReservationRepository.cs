@@ -45,7 +45,7 @@ public class ReservationRepository(AppDbContext context) : IReservationRepositor
             .Include(br => br.Book)
             .Include(br => br.Book.Authors)
             .Include(br => br.Customer)
-            .OrderByDescending(br => br.CreatedDate)
+            .OrderByDescending(br => br.Id)
             .Skip(skipCount)
             .Take(pageSize)
             .ToListAsync();
@@ -59,8 +59,8 @@ public class ReservationRepository(AppDbContext context) : IReservationRepositor
             .Include(br => br.Book)
             .Include(br => br.Book.Authors)
             .Include(br => br.Customer)
+            .OrderByDescending(br => br.Id)
             .Where(br => br.Customer.Id == customerId)
-            .OrderByDescending(br => br.CreatedDate)
             .Skip(skipCount)
             .Take(pageSize)
             .ToListAsync();
@@ -74,8 +74,8 @@ public class ReservationRepository(AppDbContext context) : IReservationRepositor
             .Include(br => br.Customer)
             .Include(br => br.Book)
             .Include(br => br.Book.Authors)
+            .OrderByDescending(br => br.Id)
             .Where(br => br.Book.Id == bookId)
-            .OrderByDescending(br => br.CreatedDate)
             .Skip(skipCount)
             .Take(pageSize)
             .ToListAsync();

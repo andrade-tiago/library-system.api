@@ -107,6 +107,9 @@ public class BooksController(IBookService bookService) : ControllerBase
             ResponseCode.BookNotFound
                 => NotFound(response),
 
+            ResponseCode.OpenBookReservation
+                => BadRequest(response),
+
             _ => StatusCode(500, response),
         };
     }

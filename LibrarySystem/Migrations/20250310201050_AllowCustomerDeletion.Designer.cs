@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibrarySystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250310201050_AllowClientDeletion")]
+    [Migration("20250310201050_AllowCustomerDeletion")]
     partial class AllowCustomerDeletion
     {
         /// <inheritdoc />

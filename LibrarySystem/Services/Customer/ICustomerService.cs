@@ -11,4 +11,5 @@ public interface ICustomerService
     Task<ApiResponse<List<CustomerDto>>> GetCustomersAsync(PaginationRequest pagination);
     Task<ApiResponse<CustomerDto?>> CreateAsync(CustomerCreateDto dto);
     Task<ApiResponse<CustomerDto?>> UpdateAsync(int id, CustomerUpdateDto dto);
+    Task<ApiResponse<CustomerDto?>> DeleteAsync(int id); 
 }

@@ -77,4 +77,22 @@ public class CustomersController(ICustomerService customerService) : ControllerB
             _ => StatusCode(500, response),
         };
     }
+
+    [HttpDelete("{id}")]
+    [ValidateIdFilter]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        var response = await _customerService.DeleteAsync(id);
+
+        return response.Code switch
+        {
+            ResponseCode.CustomerDeleted
+                => Ok(response),
+
+            ResponseCode.CustomerNotFound or ResponseCode.OpenCustomerReservation
+                => BadRequest(response),
+
+            _ => StatusCode(500, response),
+        };
+    }
 }

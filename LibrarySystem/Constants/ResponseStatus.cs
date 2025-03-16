@@ -65,6 +65,9 @@ public class ResponseStatus
     public static readonly ResponseStatus CustomerNotFound = new(false, ResponseCode.CustomerNotFound, ResponseMessages.CustomerNotFound);
     public static readonly ResponseStatus CustomerNotUpdated = new(false, ResponseCode.CustomerNotUpdated, ResponseMessages.CustomerNotUpdated);
     public static readonly ResponseStatus CustomerUpdated = new(true, ResponseCode.CustomerUpdated, ResponseMessages.CustomerUpdated);
+    public static readonly ResponseStatus CustomerDeleted = new(true, ResponseCode.CustomerDeleted, ResponseMessages.CustomerDeleted);
+    public static readonly ResponseStatus CustomerNotDeleted = new(false, ResponseCode.CustomerNotDeleted, ResponseMessages.CustomerNotDeleted);
+    public static readonly ResponseStatus CustomerUnavailable = new(false, ResponseCode.CustomerUnavailable, ResponseMessages.CustomerUnavailable);
 
     // Pagination Messages
     public static readonly ResponseStatus PageIndexOutOfRange = new(false, ResponseCode.PageIndexOutOfRange, ResponseMessages.PageIndexOutOfRange);

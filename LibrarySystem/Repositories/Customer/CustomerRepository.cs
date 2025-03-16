@@ -22,7 +22,8 @@ public class CustomerRepository(AppDbContext context) : ICustomerRepository
         int skipCount = (page - 1) * pageSize;
 
         return await _context.Customers
-            .OrderByDescending(b => b.Id)
+            .OrderByDescending(c => c.Id)
+            .Where(c => !c.DeletedAt.HasValue)
             .Skip(skipCount)
             .Take(pageSize)
             .ToListAsync();
@@ -30,7 +31,9 @@ public class CustomerRepository(AppDbContext context) : ICustomerRepository
 
     public async Task<int> CountAsync()
     {
-        return await _context.Customers.CountAsync();
+        return await _context.Customers
+            .Where(c => !c.DeletedAt.HasValue)
+            .CountAsync();
     }
 
     public async Task<Models.Customer?> CreateAsync(Models.Customer customer)
@@ -49,6 +52,6 @@ public class CustomerRepository(AppDbContext context) : ICustomerRepository
 
     public async Task<bool> CustomerExistsAsync(int customerId)
     {
-        return await _context.Customers.AnyAsync(c => c.Id == customerId);
+        return await _context.Customers.AnyAsync(c => (c.Id == customerId) && (!c.DeletedAt.HasValue));
     }
 }

@@ -4,15 +4,18 @@ using LibrarySystem.DTOs.Customer;
 using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
 using LibrarySystem.Repositories.Customer;
+using LibrarySystem.Repositories.Reservation;
 
 namespace LibrarySystem.Services.Customer;
 
 public class CustomerService(
     ICustomerRepository customerRepository,
+    IReservationRepository reservationRepository,
     IMapper mapper
 ) : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository = customerRepository;
+    private readonly IReservationRepository _reservationRepository = reservationRepository;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ApiResponse<CustomerDto?>> GetByIdAsync(int id)
@@ -121,6 +124,40 @@ public class CustomerService(
         }
         _mapper.Map(ResponseStatus.CustomerUpdated, response);
         response.Result = _mapper.Map<CustomerDto>(customer);
+        return response;
+    }
+
+    public async Task<ApiResponse<CustomerDto?>> DeleteAsync(int id)
+    {
+        ApiResponse<CustomerDto?> response = new();
+
+        var customer = await _customerRepository.GetByIdAsync(id);
+        if (customer is null)
+        {
+            _mapper.Map(ResponseStatus.CustomerNotFound, response);
+            return response;
+        }
+
+        var customerLastReservation = await _reservationRepository.GetLastByCustomerAsync(id);
+        if (customerLastReservation is not null && customerLastReservation.ReturnedDate is null)
+        {
+            _mapper.Map(ResponseStatus.OpenCustomerReservation, response);
+            return response;
+        }
+
+        customer.Name      = null;
+        customer.CPF       = null;
+        customer.BirthDate = null;
+        customer.DeletedAt = DateTime.UtcNow;
+
+        var deletedCustomer = await _customerRepository.UpdateAsync(customer);
+        if (deletedCustomer is null)
+        {
+            _mapper.Map(ResponseStatus.CustomerNotDeleted, response);
+            return response;
+        }
+        _mapper.Map(ResponseStatus.CustomerDeleted, response);
+        response.Result = _mapper.Map<CustomerDto>(deletedCustomer);
         return response;
     }
 

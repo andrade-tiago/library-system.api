@@ -40,6 +40,9 @@ public enum ResponseCode
     CustomerNotFound = 3009,
     CustomerNotUpdated = 3010,
     CustomerUpdated = 3011,
+    CustomerDeleted = 3012,
+    CustomerNotDeleted = 3013,
+    CustomerUnavailable = 3014,
 
     // Pagination
     PageIndexOutOfRange = 4000,

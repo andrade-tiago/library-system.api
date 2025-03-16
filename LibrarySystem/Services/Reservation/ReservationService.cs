@@ -188,6 +188,11 @@ public class ReservationService(
             _mapper.Map(ResponseStatus.CustomerNotFound, response);
             return response;
         }
+        if (customer.DeletedAt.HasValue)
+        {
+            _mapper.Map(ResponseStatus.CustomerUnavailable, response);
+            return response;
+        }
 
         var book = await _bookRepository.GetByIdAsync(dto.BookId);
         if (book is null)

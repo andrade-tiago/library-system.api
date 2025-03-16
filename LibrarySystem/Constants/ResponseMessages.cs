@@ -40,6 +40,9 @@ public static class ResponseMessages
     public const string CustomerNotFound = "Customer not found";
     public const string CustomerNotUpdated = "Error updating customer";
     public const string CustomerUpdated = "Customer updated successfully";
+    public const string CustomerDeleted = "Customer deleted successfully";
+    public const string CustomerNotDeleted = "Error deleting customer";
+    public const string CustomerUnavailable = "Customer has been deleted";
 
     // Pagination Messages
     public const string PageIndexOutOfRange = "Page must be at least 1";

@@ -29,8 +29,12 @@ public class CustomersController(ICustomerService customerService) : ControllerB
 
         return response.Code switch
         {
-            ResponseCode.CustomerFetched => Ok(response),
-            ResponseCode.InvalidCpf => BadRequest(response),
+            ResponseCode.CustomerFetched
+                => Ok(response),
+
+            ResponseCode.InvalidCpf
+                => BadRequest(response),
+
             _ => NotFound(response),
         };
     }
@@ -68,7 +72,7 @@ public class CustomersController(ICustomerService customerService) : ControllerB
 
         return response.Code switch
         {
-            ResponseCode.CustomerUpdated when response.Result is not null
+            ResponseCode.CustomerUpdated
                 => Ok(response),
 
             ResponseCode.CustomerNotFound
@@ -89,7 +93,8 @@ public class CustomersController(ICustomerService customerService) : ControllerB
             ResponseCode.CustomerDeleted
                 => Ok(response),
 
-            ResponseCode.CustomerNotFound or ResponseCode.OpenCustomerReservation
+            ResponseCode.CustomerNotFound or
+            ResponseCode.OpenCustomerReservation
                 => BadRequest(response),
 
             _ => StatusCode(500, response),

@@ -57,7 +57,7 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
 
         return response.Code switch
         {
-            ResponseCode.AuthorUpdated when response.Result is not null
+            ResponseCode.AuthorUpdated
                 => Ok(response),
 
             ResponseCode.AuthorNotFound

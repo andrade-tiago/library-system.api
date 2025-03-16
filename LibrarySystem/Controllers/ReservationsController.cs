@@ -94,13 +94,15 @@ public class ReservationsController(IReservationService reservationService) : Co
 
         return response.Code switch
         {
-            ResponseCode.ReservationCompleted or ResponseCode.ReservationCompletedLate
+            ResponseCode.ReservationCompleted or
+            ResponseCode.ReservationCompletedLate
                 => Ok(response),
 
             ResponseCode.ReservationNotFound
                 => NotFound(response),
 
-            ResponseCode.ReservationAlreadyCompleted or ResponseCode.ReservationCompleteLaterThanToday
+            ResponseCode.ReservationAlreadyCompleted or
+            ResponseCode.ReservationCompleteLaterThanToday
                 => BadRequest(response),
 
             _ => StatusCode(500, response),

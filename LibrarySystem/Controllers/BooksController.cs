@@ -82,7 +82,7 @@ public class BooksController(IBookService bookService) : ControllerBase
 
         return response.Code switch
         {
-            ResponseCode.BookUpdated when response.Result is not null
+            ResponseCode.BookUpdated
                 => Ok(response),
 
             ResponseCode.BookNotFound or
@@ -101,7 +101,7 @@ public class BooksController(IBookService bookService) : ControllerBase
 
         return response.Code switch
         {
-            ResponseCode.BookUpdated when response.Result is not null
+            ResponseCode.BookUpdated
                 => Ok(response),
 
             ResponseCode.BookNotFound

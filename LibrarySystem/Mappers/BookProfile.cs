@@ -12,9 +12,10 @@ public class BookProfile : Profile
             .ForMember(dest => dest.Id,      opt => opt.Ignore())
             .ForMember(dest => dest.Authors, opt => opt.Ignore());
 
-        CreateMap<BookUpdateDto, Book>()
-            .ForMember(dest => dest.Id,      opt => opt.Ignore())
-            .ForMember(dest => dest.Authors, opt => opt.Ignore());
+        CreateMap<BookUpdateBasicDto, Book>()
+            .ForMember(dest => dest.Id,          opt => opt.Ignore())
+            .ForMember(dest => dest.Authors,     opt => opt.Ignore())
+            .ForMember(dest => dest.IsAvailable, opt => opt.Ignore());
 
         CreateMap<Book, BookDto>();
     }

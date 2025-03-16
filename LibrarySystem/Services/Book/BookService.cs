@@ -5,17 +5,20 @@ using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Response;
 using LibrarySystem.Repositories.Author;
 using LibrarySystem.Repositories.Book;
+using LibrarySystem.Repositories.Reservation;
 
 namespace LibrarySystem.Services.Book;
 
 public class BookService(
     IBookRepository bookRepository,
     IAuthorRepository authorRepository,
+    IReservationRepository reservationRepository,
     IMapper mapper
 ) : IBookService
 {
     private readonly IBookRepository _bookRepository = bookRepository;
     private readonly IAuthorRepository _authorRepository = authorRepository;
+    private readonly IReservationRepository _reservationRepository = reservationRepository;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ApiResponse<BookDto?>> GetByIdAsync(int id)
@@ -124,7 +127,31 @@ public class BookService(
         return response;
     }
 
-    public async Task<ApiResponse<BookDto?>> UpdateBookAsync(int bookId, BookUpdateDto dto)
+    public async Task<ApiResponse<BookDto?>> UpdateBookBasicAsync(int bookId, BookUpdateBasicDto dto)
+    {
+        ApiResponse<BookDto?> response = new();
+
+        var book = await _bookRepository.GetByIdAsync(bookId);
+        if (book is null)
+        {
+            _mapper.Map(ResponseStatus.BookNotFound, response);
+            return response;
+        }
+
+        _mapper.Map(dto, book);
+
+        var updatedBook = await _bookRepository.UpdateBookAsync(book);
+        if (updatedBook is null)
+        {
+            _mapper.Map(ResponseStatus.BookNotUpdated, response);
+            return response;
+        }
+        _mapper.Map(ResponseStatus.BookUpdated, response);
+        response.Result = _mapper.Map<BookDto>(book);
+        return response;
+    }
+
+    public async Task<ApiResponse<BookDto?>> UpdateBookAuthorsAsync(int bookId, BookUpdateAuthorsDto dto)
     {
         ApiResponse<BookDto?> response = new();
 
@@ -155,7 +182,41 @@ public class BookService(
             }
             book.Authors.AddRange(authorsToAdd);
         }
-        _mapper.Map(dto, book);
+
+        var updatedBook = await _bookRepository.UpdateBookAsync(book);
+        if (updatedBook is null)
+        {
+            _mapper.Map(ResponseStatus.BookNotUpdated, response);
+            return response;
+        }
+        _mapper.Map(ResponseStatus.BookUpdated, response);
+        response.Result = _mapper.Map<BookDto>(book);
+        return response;
+    }
+
+    public async Task<ApiResponse<BookDto?>> UpdateBookAvailabilityAsync(int bookId, BookUpdateAvailabilityDto dto)
+    {
+        ApiResponse<BookDto?> response = new();
+
+        var book = await _bookRepository.GetByIdAsync(bookId);
+        if (book is null)
+        {
+            _mapper.Map(ResponseStatus.BookNotFound, response);
+            return response;
+        }
+
+        // Cannot mark a book as unavailable if it is reserved
+        if (dto.IsAvailable == false && book.IsAvailable)
+        {
+            var lastBookReservation = await _reservationRepository.GetLastByBookAsync(bookId);
+            if (lastBookReservation is not null && lastBookReservation.ReturnedDate is null)
+            {
+                _mapper.Map(ResponseStatus.OpenBookReservation, response);
+                return response;
+            }
+        }
+
+        book.IsAvailable = dto.IsAvailable;
         var updatedBook = await _bookRepository.UpdateBookAsync(book);
 
         if (updatedBook is null)

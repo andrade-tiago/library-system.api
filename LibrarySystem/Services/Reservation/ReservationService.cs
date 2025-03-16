@@ -200,6 +200,11 @@ public class ReservationService(
             _mapper.Map(ResponseStatus.BookNotFound, response);
             return response;
         }
+        if (!book.IsAvailable)
+        {
+            _mapper.Map(ResponseStatus.BookNotAvailable, response);
+            return response;
+        }
 
         var lastCustomerReservation = await _reservationRepository.GetLastByCustomerAsync(dto.CustomerId);
         if (lastCustomerReservation?.ReturnedDate is not null)

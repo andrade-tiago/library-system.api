@@ -26,6 +26,7 @@ public enum ResponseCode
     BookNotUpdated = 2009,
     BookTitleRequired = 2010,
     BookUpdated = 2011,
+    BookAvailabilityRequired = 2022,
 
     // Customer
     CustomerBirthDateRequired = 3000,
@@ -69,4 +70,5 @@ public enum ResponseCode
     ReservationCompletedLate = 6012,
     ReservationCompleteLaterThanToday = 6013,
     ReservationAlreadyCompleted = 6014,
+    BookNotAvailable = 6015,
 }

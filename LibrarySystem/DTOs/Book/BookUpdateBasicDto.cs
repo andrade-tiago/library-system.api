@@ -3,15 +3,11 @@ using LibrarySystem.Constants;
 
 namespace LibrarySystem.DTOs.Book;
 
-public class BookUpdateDto
+public class BookUpdateBasicDto
 {
     [Required(ErrorMessage = ResponseMessages.BookTitleRequired)]
     public string Title { get; set; }
 
     [Required(ErrorMessage = ResponseMessages.BookReleaseDateRequired)]
     public DateOnly ReleaseDate { get; set; }
-
-    [Required(ErrorMessage = ResponseMessages.BookAuthorsRequired)]
-    [MinLength(1, ErrorMessage = ResponseMessages.BookAuthorsRequired)]
-    public List<int> AuthorIds { get; set; }
 }

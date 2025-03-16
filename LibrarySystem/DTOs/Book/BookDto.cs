@@ -8,4 +8,5 @@ public class BookDto
     public string Title { get; set; }
     public DateOnly ReleaseDate { get; set; }
     public List<AuthorDto> Authors { get; set; }
+    public bool IsAvailable { get; set; }
 }

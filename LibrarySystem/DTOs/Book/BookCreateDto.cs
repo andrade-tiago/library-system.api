@@ -14,4 +14,6 @@ public class BookCreateDto
     [Required(ErrorMessage = ResponseMessages.BookAuthorsRequired)]
     [MinLength(1, ErrorMessage = ResponseMessages.BookAuthorsRequired)]
     public List<int> AuthorIds { get; set; }
+
+    public bool Isavailable { get; set; } = true;
 }

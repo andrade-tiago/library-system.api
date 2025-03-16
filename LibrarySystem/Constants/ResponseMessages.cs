@@ -26,6 +26,7 @@ public static class ResponseMessages
     public const string BookNotUpdated = "Error updating book";
     public const string BookTitleRequired = "Book title required";
     public const string BookUpdated = "Book updated successfully";
+    public const string BookAvailabilityRequired = "Book availability required";
 
     // Customer Messages
     public const string CustomerBirthDateRequired = "Customer birth date required";
@@ -65,9 +66,10 @@ public static class ResponseMessages
     public const string ReservationCreated = "Reservation created successfully";
     public const string ReservationNotCreated = "Error creating reservation";
     public const string OpenCustomerReservation = "Customer still has an open reservation";
-    public const string OpenBookReservation = "Book is already reserved";
+    public const string OpenBookReservation = "Book already/still reserved";
     public const string ReservationCompletedLate = "Book returned successfully (late)";
     public const string ReservationCompleteLaterThanToday = "Book return date cannot be later than today";
     public const string ReservationAlreadyCompleted = "Reservation already completed";
+    public const string BookNotAvailable = "Book not available";
 }
 

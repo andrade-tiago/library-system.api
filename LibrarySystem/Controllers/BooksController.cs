@@ -58,9 +58,27 @@ public class BooksController(IBookService bookService) : ControllerBase
 
     [HttpPut("{id}")]
     [ValidateIdFilter]
-    public async Task<IActionResult> UpdateBookAsync(int id, BookUpdateDto dto)
+    public async Task<IActionResult> UpdateBookBasicAsync(int id, BookUpdateBasicDto dto)
     {
-        var response = await _bookService.UpdateBookAsync(id, dto);
+        var response = await _bookService.UpdateBookBasicAsync(id, dto);
+
+        return response.Code switch
+        {
+            ResponseCode.BookUpdated when response.Result is not null
+                => Ok(response),
+
+            ResponseCode.BookNotFound
+                => NotFound(response),
+
+            _ => StatusCode(500, response),
+        };
+    }
+
+    [HttpPatch("{id}/authors")]
+    [ValidateIdFilter]
+    public async Task<IActionResult> UpdateBookAuthorsAsync(int id, BookUpdateAuthorsDto dto)
+    {
+        var response = await _bookService.UpdateBookAuthorsAsync(id, dto);
 
         return response.Code switch
         {
@@ -69,6 +87,24 @@ public class BooksController(IBookService bookService) : ControllerBase
 
             ResponseCode.BookNotFound or
             ResponseCode.AuthorNotFoundSome
+                => NotFound(response),
+
+            _ => StatusCode(500, response),
+        };
+    }
+
+    [HttpPatch("{id}/availability")]
+    [ValidateIdFilter]
+    public async Task<IActionResult> UpdateBookAvailabilityAsync(int id, BookUpdateAvailabilityDto dto)
+    {
+        var response = await _bookService.UpdateBookAvailabilityAsync(id, dto);
+
+        return response.Code switch
+        {
+            ResponseCode.BookUpdated when response.Result is not null
+                => Ok(response),
+
+            ResponseCode.BookNotFound
                 => NotFound(response),
 
             _ => StatusCode(500, response),

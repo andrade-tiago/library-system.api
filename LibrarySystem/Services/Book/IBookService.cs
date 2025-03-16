@@ -10,5 +10,7 @@ public interface IBookService
     Task<ApiResponse<List<BookDto>>> GetBooksAsync(PaginationRequest pagination);
     Task<ApiResponse<List<BookDto>?>> GetByAuthorIdAsync(int authorId, PaginationRequest pagination);
     Task<ApiResponse<BookDto?>> CreateBookAsync(BookCreateDto dto);
-    Task<ApiResponse<BookDto?>> UpdateBookAsync(int bookId, BookUpdateDto dto);
+    Task<ApiResponse<BookDto?>> UpdateBookBasicAsync(int bookId, BookUpdateBasicDto dto);
+    Task<ApiResponse<BookDto?>> UpdateBookAuthorsAsync(int bookId, BookUpdateAuthorsDto dto);
+    Task<ApiResponse<BookDto?>> UpdateBookAvailabilityAsync(int bookId, BookUpdateAvailabilityDto dto);
 }

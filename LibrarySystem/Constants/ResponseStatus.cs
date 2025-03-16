@@ -51,6 +51,7 @@ public class ResponseStatus
     public static readonly ResponseStatus BookNotUpdated = new(false, ResponseCode.BookNotUpdated, ResponseMessages.BookNotUpdated);
     public static readonly ResponseStatus BookTitleRequired = new(false, ResponseCode.BookTitleRequired, ResponseMessages.BookTitleRequired);
     public static readonly ResponseStatus BookUpdated = new(true, ResponseCode.BookUpdated, ResponseMessages.BookUpdated);
+    public static readonly ResponseStatus BookAvailabilityRequired = new(false, ResponseCode.BookAvailabilityRequired, ResponseMessages.BookAvailabilityRequired);
 
     // Customer Messages
     public static readonly ResponseStatus CustomerBirthDateRequired = new(false, ResponseCode.CustomerBirthDateRequired, ResponseMessages.CustomerBirthDateRequired);
@@ -94,4 +95,5 @@ public class ResponseStatus
     public static readonly ResponseStatus ReservationCompletedLate = new(true, ResponseCode.ReservationCompletedLate, ResponseMessages.ReservationCompletedLate);
     public static readonly ResponseStatus ReservationCompleteLaterThanToday = new(false, ResponseCode.ReservationCompleteLaterThanToday, ResponseMessages.ReservationCompleteLaterThanToday);
     public static readonly ResponseStatus ReservationAlreadyCompleted = new(false, ResponseCode.ReservationAlreadyCompleted, ResponseMessages.ReservationAlreadyCompleted);
+    public static readonly ResponseStatus BookNotAvailable = new(false, ResponseCode.BookNotAvailable, ResponseMessages.BookNotAvailable);
 }

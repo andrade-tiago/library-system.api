@@ -37,11 +37,11 @@ public class BookService(
         return response;
     }
 
-    public async Task<ApiResponse<List<BookDto>>> GetBooksAsync(PaginationRequest pagination)
+    public async Task<ApiResponse<List<BookDto>>> GetAllPagedAsync(PaginationRequest pagination)
     {
         ApiResponse<List<BookDto>> response = new();
 
-        var totalCount = await _bookRepository.GetTotalCountAsync();
+        var totalCount = await _bookRepository.CountAsync();
 
         response.Pagination = new Pagination
         {
@@ -56,14 +56,14 @@ public class BookService(
             response.Result = [];
             return response;
         }
-        var books = await _bookRepository.GetBooksAsync(pagination.Page, pagination.PageSize);
+        var books = await _bookRepository.GetAllPagedAsync(pagination.Page, pagination.PageSize);
 
         _mapper.Map(ResponseStatus.BookFetchedMany, response);
         response.Result = _mapper.Map<List<BookDto>>(books);
         return response;
     }
 
-    public async Task<ApiResponse<List<BookDto>?>> GetByAuthorIdAsync(int authorId, PaginationRequest pagination)
+    public async Task<ApiResponse<List<BookDto>?>> GetByAuthorPagedAsync(int authorId, PaginationRequest pagination)
     {
         ApiResponse<List<BookDto>?> response = new();
 
@@ -75,7 +75,7 @@ public class BookService(
             return response;
         }
 
-        var totalCount = await _bookRepository.GetAuthorBooksTotalCountAsync(authorId);
+        var totalCount = await _bookRepository.CountByAuthorIdAsync(authorId);
 
         response.Pagination = new Pagination
         {
@@ -94,14 +94,14 @@ public class BookService(
             response.Result = [];
             return response;
         }
-        var books = await _bookRepository.GetByAuthorIdAsync(authorId, pagination.Page, pagination.PageSize);
+        var books = await _bookRepository.GetByAuthorPagedAsync(authorId, pagination.Page, pagination.PageSize);
 
         _mapper.Map(ResponseStatus.BookFetchedMany, response);
         response.Result = _mapper.Map<List<BookDto>>(books);
         return response;
     }
 
-    public async Task<ApiResponse<BookDto?>> CreateBookAsync(BookCreateDto dto)
+    public async Task<ApiResponse<BookDto?>> CreateAsync(BookCreateDto dto)
     {
         ApiResponse<BookDto?> response = new();
 
@@ -115,7 +115,7 @@ public class BookService(
         var book = _mapper.Map<Models.Book>(dto);
         book.Authors = authors;
 
-        var createdBook = await _bookRepository.CreateBookAsync(book);
+        var createdBook = await _bookRepository.CreateAsync(book);
 
         if (createdBook is null)
         {
@@ -140,7 +140,7 @@ public class BookService(
 
         _mapper.Map(dto, book);
 
-        var updatedBook = await _bookRepository.UpdateBookAsync(book);
+        var updatedBook = await _bookRepository.UpdateAsync(book);
         if (updatedBook is null)
         {
             _mapper.Map(ResponseStatus.BookNotUpdated, response);
@@ -183,7 +183,7 @@ public class BookService(
             book.Authors.AddRange(authorsToAdd);
         }
 
-        var updatedBook = await _bookRepository.UpdateBookAsync(book);
+        var updatedBook = await _bookRepository.UpdateAsync(book);
         if (updatedBook is null)
         {
             _mapper.Map(ResponseStatus.BookNotUpdated, response);
@@ -217,7 +217,7 @@ public class BookService(
         }
 
         book.IsAvailable = dto.IsAvailable;
-        var updatedBook = await _bookRepository.UpdateBookAsync(book);
+        var updatedBook = await _bookRepository.UpdateAsync(book);
 
         if (updatedBook is null)
         {

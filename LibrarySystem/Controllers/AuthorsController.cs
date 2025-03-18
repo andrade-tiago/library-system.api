@@ -32,9 +32,9 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAuthorsAsync([FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationRequest pagination)
     {
-        var response = await _authorService.GetAuthorsAsync(pagination);
+        var response = await _authorService.GetAllPagedAsync(pagination);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }

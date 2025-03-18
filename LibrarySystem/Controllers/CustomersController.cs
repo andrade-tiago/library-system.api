@@ -40,9 +40,9 @@ public class CustomersController(ICustomerService customerService) : ControllerB
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCustomersAsync([FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationRequest pagination)
     {
-        var response = await _customerService.GetCustomersAsync(pagination);
+        var response = await _customerService.GetAllPagedAsync(pagination);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }

@@ -41,27 +41,27 @@ public class ReservationsController(IReservationService reservationService) : Co
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetReservationsAsync([FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationRequest pagination)
     {
-        var response = await _reservationService.GetReservationsAsync(pagination);
+        var response = await _reservationService.GetAllPagedAsync(pagination);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
 
     [HttpGet("/api/customers/{customerId}/reservations")]
     [ValidateIdFilter(nameof(customerId))]
-    public async Task<IActionResult> GetReservationsByCustomerAsync(int customerId, [FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetByCustomerPagedAsync(int customerId, [FromQuery] PaginationRequest pagination)
     {
-        var response = await _reservationService.GetReservationsByCustomerAsync(customerId, pagination);
+        var response = await _reservationService.GetByCustomerPagedAsync(customerId, pagination);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
 
     [HttpGet("/api/books/{bookId}/reservations")]
     [ValidateIdFilter(nameof(bookId))]
-    public async Task<IActionResult> GetReservationsByBookAsync(int bookId, [FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetByBookPagedAsync(int bookId, [FromQuery] PaginationRequest pagination)
     {
-        var response = await _reservationService.GetReservationsByBookAsync(bookId, pagination);
+        var response = await _reservationService.GetByBookPagedAsync(bookId, pagination);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
@@ -86,11 +86,11 @@ public class ReservationsController(IReservationService reservationService) : Co
         };
     }
 
-    [HttpPatch("{id}/complete")]
+    [HttpPatch("{id}/close")]
     [ValidateIdFilter]
-    public async Task<IActionResult> CompleteReservationAsync(int id, ReservationCompleteDto dto)
+    public async Task<IActionResult> CloseReservationAsync(int id, ReservationCompleteDto dto)
     {
-        var response = await _reservationService.CompleteReservationAsync(id, dto);
+        var response = await _reservationService.CloseReservationAsync(id, dto);
 
         return response.Code switch
         {

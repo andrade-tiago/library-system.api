@@ -23,18 +23,18 @@ public class BooksController(IBookService bookService) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetBooksAsync([FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationRequest pagination)
     {
-        var response = await _bookService.GetBooksAsync(pagination);
+        var response = await _bookService.GetAllPagedAsync(pagination);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
 
     [HttpGet("/api/authors/{authorId}/books")]
     [ValidateIdFilter(nameof(authorId))]
-    public async Task<IActionResult> GetByAuthorIdAsync(int authorId, [FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetByAuthorPagedAsync(int authorId, [FromQuery] PaginationRequest pagination)
     { 
-        var response = await _bookService.GetByAuthorIdAsync(authorId, pagination);
+        var response = await _bookService.GetByAuthorPagedAsync(authorId, pagination);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
@@ -42,7 +42,7 @@ public class BooksController(IBookService bookService) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateBookAsync(BookCreateDto dto)
     {
-        var response = await _bookService.CreateBookAsync(dto);
+        var response = await _bookService.CreateAsync(dto);
 
         return response.Code switch
         {

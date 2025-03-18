@@ -14,7 +14,7 @@ public class BookRepository(AppDbContext context) : IBookRepository
             .FirstOrDefaultAsync(b => b.Id == id);
     }
 
-    public async Task<List<Models.Book>> GetBooksAsync(int page, int pageSize)
+    public async Task<List<Models.Book>> GetAllPagedAsync(int page, int pageSize)
     {
         int skipCount = (page - 1) * pageSize;
 
@@ -26,7 +26,7 @@ public class BookRepository(AppDbContext context) : IBookRepository
             .ToListAsync();
     }
 
-    public async Task<List<Models.Book>> GetByAuthorIdAsync(int authorId, int page, int pageSize)
+    public async Task<List<Models.Book>> GetByAuthorPagedAsync(int authorId, int page, int pageSize)
     {
         var skipCount = (page - 1) * pageSize;
 
@@ -39,26 +39,26 @@ public class BookRepository(AppDbContext context) : IBookRepository
             .ToListAsync();
     }
 
-    public async Task<int> GetTotalCountAsync()
+    public async Task<int> CountAsync()
     {
         return await _context.Books.CountAsync();
     }
 
-    public async Task<int> GetAuthorBooksTotalCountAsync(int authorId)
+    public async Task<int> CountByAuthorIdAsync(int authorId)
     {
         return await _context.Books
             .Where(b => b.Authors.Any(a => a.Id == authorId))
             .CountAsync();
     }
 
-    public async Task<Models.Book?> CreateBookAsync(Models.Book book)
+    public async Task<Models.Book?> CreateAsync(Models.Book book)
     {
         await _context.Books.AddAsync(book);
         var changesCount = await _context.SaveChangesAsync();
         return changesCount > 0 ? book : null;
     }
 
-    public async Task<Models.Book?> UpdateBookAsync(Models.Book book)
+    public async Task<Models.Book?> UpdateAsync(Models.Book book)
     {
         _context.Books.Update(book);
         var changesCount = await _context.SaveChangesAsync();

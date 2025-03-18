@@ -55,7 +55,7 @@ public class CustomerService(
         return response;
     }
 
-    public async Task<ApiResponse<List<CustomerDto>>> GetCustomersAsync(PaginationRequest pagination)
+    public async Task<ApiResponse<List<CustomerDto>>> GetAllPagedAsync(PaginationRequest pagination)
     {
         ApiResponse<List<CustomerDto>> response = new();
 
@@ -74,7 +74,7 @@ public class CustomerService(
             response.Result = [];
             return response;
         }
-        var customers = await _customerRepository.GetCustomersAsync(pagination.Page, pagination.PageSize);
+        var customers = await _customerRepository.GetAllPagedAsync(pagination.Page, pagination.PageSize);
 
         _mapper.Map(ResponseStatus.CustomerFetchedMany, response);
         response.Result = _mapper.Map<List<CustomerDto>>(customers);

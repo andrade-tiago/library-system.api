@@ -34,7 +34,7 @@ public class AuthorRepository : IAuthorRepository
             .ToListAsync();
     }
 
-    public async Task<List<Models.Author>> GetAuthorsAsync(int page, int pageSize)
+    public async Task<List<Models.Author>> GetAllPagedAsync(int page, int pageSize)
     {
         int skipCount = (page - 1) * pageSize;
 
@@ -45,7 +45,7 @@ public class AuthorRepository : IAuthorRepository
             .ToListAsync();
     }
 
-    public async Task<int> GetTotalCountAsync()
+    public async Task<int> CountAsync()
     {
         return await _context.Authors.CountAsync();
     }

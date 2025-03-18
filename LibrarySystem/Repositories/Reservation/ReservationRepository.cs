@@ -37,7 +37,7 @@ public class ReservationRepository(AppDbContext context) : IReservationRepositor
             .FirstOrDefaultAsync(br => br.Book.Id == bookId);
     }
 
-    public async Task<List<Models.Reservation>> GetReservationsAsync(int page, int pageSize)
+    public async Task<List<Models.Reservation>> GetAllPagedAsync(int page, int pageSize)
     {
         int skipCount = (page - 1) * pageSize;
 
@@ -51,7 +51,7 @@ public class ReservationRepository(AppDbContext context) : IReservationRepositor
             .ToListAsync();
     }
 
-    public async Task<List<Models.Reservation>> GetReservationsByCustomerAsync(int customerId, int page, int pageSize)
+    public async Task<List<Models.Reservation>> GetByCustomerPagedAsync(int customerId, int page, int pageSize)
     {
         int skipCount = (page - 1) * pageSize;
 
@@ -66,7 +66,7 @@ public class ReservationRepository(AppDbContext context) : IReservationRepositor
             .ToListAsync();
     }
 
-    public async Task<List<Models.Reservation>> GetReservationsByBookAsync(int bookId, int page, int pageSize)
+    public async Task<List<Models.Reservation>> GetByBookPagedAsync(int bookId, int page, int pageSize)
     {
         int skipCount = (page - 1) * pageSize;
 
@@ -86,7 +86,7 @@ public class ReservationRepository(AppDbContext context) : IReservationRepositor
         return await _context.Reservations.CountAsync();
     }
 
-    public async Task<int> CountByCustomerAsync(int customerId)
+    public async Task<int> CountByCustomerIdAsync(int customerId)
     {
         return await _context.Reservations
             .Include(br => br.Customer)
@@ -94,7 +94,7 @@ public class ReservationRepository(AppDbContext context) : IReservationRepositor
             .CountAsync();
     }
 
-    public async Task<int> CountByBookAsync(int bookId)
+    public async Task<int> CountByBookIdAsync(int bookId)
     {
         return await _context.Reservations
             .Include(br => br.Book)

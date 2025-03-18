@@ -51,11 +51,11 @@ public class AuthorService(
         return response;
     }
 
-    public async Task<ApiResponse<List<AuthorDto>>> GetAuthorsAsync(PaginationRequest pagination)
+    public async Task<ApiResponse<List<AuthorDto>>> GetAllPagedAsync(PaginationRequest pagination)
     {
         ApiResponse<List<AuthorDto>> response = new();
 
-        var totalCount = await _authorRepository.GetTotalCountAsync();
+        var totalCount = await _authorRepository.CountAsync();
 
         response.Pagination = new Pagination
         {
@@ -70,7 +70,7 @@ public class AuthorService(
             response.Result = [];
             return response;
         }
-        var authors = await _authorRepository.GetAuthorsAsync(pagination.Page, pagination.PageSize);
+        var authors = await _authorRepository.GetAllPagedAsync(pagination.Page, pagination.PageSize);
 
         _mapper.Map(ResponseStatus.AuthorFetchedMany, response);
         response.Result = _mapper.Map<List<AuthorDto>>(authors);

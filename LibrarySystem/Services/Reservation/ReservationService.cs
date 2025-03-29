@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using LibrarySystem.Constants;
-using LibrarySystem.DTOs.Reservation;
+using LibrarySystem.DTOs.Book;
 using LibrarySystem.DTOs.Request;
+using LibrarySystem.DTOs.Reservation;
 using LibrarySystem.DTOs.Response;
 using LibrarySystem.Repositories.Book;
-using LibrarySystem.Repositories.Reservation;
 using LibrarySystem.Repositories.Customer;
+using LibrarySystem.Repositories.Reservation;
 using Microsoft.Extensions.Options;
 
 namespace LibrarySystem.Services.Reservation;
@@ -194,7 +195,7 @@ public class ReservationService(
             return response;
         }
 
-        var book = await _bookRepository.GetByIdAsync(dto.BookId);
+        var book = await _bookRepository.GetByIdAsync(dto.BookId, new BookGetByIdOptions { IncludeAuthors = false });
         if (book is null)
         {
             _mapper.Map(ResponseStatus.BookNotFound, response);

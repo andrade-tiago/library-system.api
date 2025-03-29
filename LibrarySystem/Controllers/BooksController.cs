@@ -1,5 +1,4 @@
 ﻿using LibrarySystem.DTOs.Book;
-using LibrarySystem.DTOs.Request;
 using LibrarySystem.Enums;
 using LibrarySystem.Filters;
 using LibrarySystem.Services.Book;
@@ -15,26 +14,26 @@ public class BooksController(IBookService bookService) : ControllerBase
 
     [HttpGet("{id}", Name = "GetBookById")]
     [ValidateIdFilter]
-    public async Task<IActionResult> GetByIdAsync(int id)
+    public async Task<IActionResult> GetByIdAsync(int id, [FromQuery] BookGetByIdDto options)
     {
-        var response = await _bookService.GetByIdAsync(id);
+        var response = await _bookService.GetByIdAsync(id, options);
 
         return response.Result is not null ? Ok(response) : NotFound(response);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetAllPagedAsync([FromQuery] BookGetAllPagedDto options)
     {
-        var response = await _bookService.GetAllPagedAsync(pagination);
+        var response = await _bookService.GetAllPagedAsync(options);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
 
     [HttpGet("/api/authors/{authorId}/books")]
     [ValidateIdFilter(nameof(authorId))]
-    public async Task<IActionResult> GetByAuthorPagedAsync(int authorId, [FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetByAuthorPagedAsync(int authorId, [FromQuery] BookGetByAuthorPagedDto options)
     { 
-        var response = await _bookService.GetByAuthorPagedAsync(authorId, pagination);
+        var response = await _bookService.GetByAuthorPagedAsync(authorId, options);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }

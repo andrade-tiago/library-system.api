@@ -18,5 +18,9 @@ public class BookProfile : Profile
             .ForMember(dest => dest.IsAvailable, opt => opt.Ignore());
 
         CreateMap<Book, BookDto>();
+
+        CreateMap<BookGetByIdDto, BookGetByIdOptions>();
+        CreateMap<BookGetAllPagedDto, BookGetAllPagedOptions>();
+        CreateMap<BookGetByAuthorPagedDto, BookGetByAuthorPagedOptions>();
     }
 }

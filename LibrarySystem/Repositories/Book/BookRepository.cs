@@ -1,4 +1,5 @@
 ﻿using LibrarySystem.Data;
+using LibrarySystem.DTOs.Book;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibrarySystem.Repositories.Book;
@@ -7,36 +8,45 @@ public class BookRepository(AppDbContext context) : IBookRepository
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<Models.Book?> GetByIdAsync(int id)
+    public async Task<Models.Book?> GetByIdAsync(int id, BookGetByIdOptions options)
     {
-        return await _context.Books
-            .Include(b => b.Authors)
-            .FirstOrDefaultAsync(b => b.Id == id);
+        var query = _context.Books.AsQueryable();
+
+        if (options.IncludeAuthors)
+            query = query.Include(b => b.Authors);
+
+        return await query.FirstOrDefaultAsync(b => b.Id == id);
     }
 
-    public async Task<List<Models.Book>> GetAllPagedAsync(int page, int pageSize)
+    public async Task<List<Models.Book>> GetAllPagedAsync(BookGetAllPagedOptions options)
     {
-        int skipCount = (page - 1) * pageSize;
+        var query = _context.Books.AsQueryable();
 
-        return await _context.Books
-            .OrderByDescending(b => b.Id)
-            .Include(b => b.Authors)
-            .Skip(skipCount)
-            .Take(pageSize)
-            .ToListAsync();
+        if (options.IncludeAuthors)
+            query = query.Include(b => b.Authors);
+
+        int skipCount = (options.Page - 1) * options.PageSize;
+
+        return await query.OrderByDescending(b => b.Id)
+                          .Skip(skipCount)
+                          .Take(options.PageSize)
+                          .ToListAsync();
     }
 
-    public async Task<List<Models.Book>> GetByAuthorPagedAsync(int authorId, int page, int pageSize)
+    public async Task<List<Models.Book>> GetByAuthorPagedAsync(int authorId, BookGetByAuthorPagedOptions options)
     {
-        var skipCount = (page - 1) * pageSize;
+        var query = _context.Books.AsQueryable();
 
-        return await _context.Books
-            .OrderByDescending(b => b.Id)
-            .Include(b => b.Authors)
-            .Where(b => b.Authors.Any(a => a.Id == authorId))
-            .Skip(skipCount)
-            .Take(pageSize)
-            .ToListAsync();
+        if (options.IncludeAuthors)
+            query = query.Include(b => b.Authors);
+
+        var skipCount = (options.Page - 1) * options.PageSize;
+
+        return await query.OrderByDescending(b => b.Id)
+                          .Where(b => b.Authors.Any(a => a.Id == authorId))
+                          .Skip(skipCount)
+                          .Take(options.PageSize)
+                          .ToListAsync();
     }
 
     public async Task<int> CountAsync()

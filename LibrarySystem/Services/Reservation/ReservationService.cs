@@ -195,7 +195,7 @@ public class ReservationService(
             return response;
         }
 
-        var book = await _bookRepository.GetByIdAsync(dto.BookId, new BookGetByIdOptions { IncludeAuthors = false });
+        var book = await _bookRepository.GetByIdAsync(dto.BookId, new BookQueryOptions { IncludeAuthors = false });
         if (book is null)
         {
             _mapper.Map(ResponseStatus.BookNotFound, response);

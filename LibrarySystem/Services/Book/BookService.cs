@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LibrarySystem.Constants;
 using LibrarySystem.DTOs.Book;
+using LibrarySystem.DTOs.Request;
 using LibrarySystem.DTOs.Reservation;
 using LibrarySystem.DTOs.Response;
 using LibrarySystem.Repositories.Author;
@@ -21,11 +22,11 @@ public class BookService(
     private readonly IReservationRepository _reservationRepository = reservationRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<ApiResponse<BookDto?>> GetByIdAsync(int id, BookGetByIdDto options)
+    public async Task<ApiResponse<BookDto?>> GetByIdAsync(int id, BookQueryOptions queryOptions)
     {
         ApiResponse<BookDto?> response = new();
 
-        var book = await _bookRepository.GetByIdAsync(id, _mapper.Map<BookGetByIdOptions>(options));
+        var book = await _bookRepository.GetByIdAsync(id, queryOptions);
 
         if (book is null)
         {
@@ -37,7 +38,7 @@ public class BookService(
         return response;
     }
 
-    public async Task<ApiResponse<List<BookDto>>> GetAllPagedAsync(BookGetAllPagedDto options)
+    public async Task<ApiResponse<List<BookDto>>> GetAllPagedAsync(BookQueryOptions queryOptions, PaginationOptions paginationOptions)
     {
         ApiResponse<List<BookDto>> response = new();
 
@@ -45,25 +46,25 @@ public class BookService(
 
         response.Pagination = new Pagination
         {
-            CurrentPage  = options.Page,
-            ItemsPerPage = options.PageSize,
+            CurrentPage  = paginationOptions.Page,
+            ItemsPerPage = paginationOptions.PageSize,
             TotalItems   = totalCount,
         };
 
-        if (options.Page > response.Pagination.TotalPages)
+        if (response.Pagination.CurrentPage > response.Pagination.TotalPages)
         {
             _mapper.Map(ResponseStatus.BookPageEmpty, response);
             response.Result = [];
             return response;
         }
-        var books = await _bookRepository.GetAllPagedAsync(_mapper.Map<BookGetAllPagedOptions>(options));
+        var books = await _bookRepository.GetAllPagedAsync(queryOptions, paginationOptions);
 
         _mapper.Map(ResponseStatus.BookFetchedMany, response);
         response.Result = _mapper.Map<List<BookDto>>(books);
         return response;
     }
 
-    public async Task<ApiResponse<List<BookDto>?>> GetByAuthorPagedAsync(int authorId, BookGetByAuthorPagedDto options)
+    public async Task<ApiResponse<List<BookDto>?>> GetByAuthorPagedAsync(int authorId, BookQueryOptions queryOptions, PaginationOptions paginationOptions)
     {
         ApiResponse<List<BookDto>?> response = new();
 
@@ -79,12 +80,12 @@ public class BookService(
 
         response.Pagination = new Pagination
         {
-            CurrentPage  = options.Page,
-            ItemsPerPage = options.PageSize,
+            CurrentPage  = paginationOptions.Page,
+            ItemsPerPage = paginationOptions.PageSize,
             TotalItems   = totalCount,
         };
 
-        if (options.Page > response.Pagination.TotalPages)
+        if (paginationOptions.Page > response.Pagination.TotalPages)
         {
             var responseStatus = totalCount > 0
                 ? ResponseStatus.BookPageEmpty
@@ -94,7 +95,7 @@ public class BookService(
             response.Result = [];
             return response;
         }
-        var books = await _bookRepository.GetByAuthorPagedAsync(authorId, _mapper.Map<BookGetByAuthorPagedOptions>(options));
+        var books = await _bookRepository.GetByAuthorPagedAsync(authorId, queryOptions, paginationOptions);
 
         _mapper.Map(ResponseStatus.BookFetchedMany, response);
         response.Result = _mapper.Map<List<BookDto>>(books);
@@ -131,7 +132,7 @@ public class BookService(
     {
         ApiResponse<BookDto?> response = new();
 
-        var book = await _bookRepository.GetByIdAsync(bookId, new BookGetByIdOptions { IncludeAuthors = false });
+        var book = await _bookRepository.GetByIdAsync(bookId, new BookQueryOptions { IncludeAuthors = false });
         if (book is null)
         {
             _mapper.Map(ResponseStatus.BookNotFound, response);
@@ -155,7 +156,7 @@ public class BookService(
     {
         ApiResponse<BookDto?> response = new();
 
-        var book = await _bookRepository.GetByIdAsync(bookId, new BookGetByIdOptions { IncludeAuthors = true });
+        var book = await _bookRepository.GetByIdAsync(bookId, BookQueryOptions.Default);
         if (book is null)
         {
             _mapper.Map(ResponseStatus.BookNotFound, response);
@@ -198,7 +199,7 @@ public class BookService(
     {
         ApiResponse<BookDto?> response = new();
 
-        var book = await _bookRepository.GetByIdAsync(bookId, new BookGetByIdOptions { IncludeAuthors = false });
+        var book = await _bookRepository.GetByIdAsync(bookId, BookQueryOptions.Default);
         if (book is null)
         {
             _mapper.Map(ResponseStatus.BookNotFound, response);

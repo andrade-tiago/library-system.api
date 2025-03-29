@@ -1,13 +1,16 @@
-﻿namespace LibrarySystem.Repositories.Reservation;
+﻿using LibrarySystem.DTOs.Request;
+using LibrarySystem.DTOs.Reservation;
+
+namespace LibrarySystem.Repositories.Reservation;
 
 public interface IReservationRepository
 {
-    Task<Models.Reservation?> GetByIdAsync(int id);
-    Task<Models.Reservation?> GetLastByCustomerAsync(int customerId);
-    Task<Models.Reservation?> GetLastByBookAsync(int bookId);
-    Task<List<Models.Reservation>> GetAllPagedAsync(int page, int pageSize);
-    Task<List<Models.Reservation>> GetByCustomerPagedAsync(int customerId, int page, int pageSize);
-    Task<List<Models.Reservation>> GetByBookPagedAsync(int bookId, int page, int pageSize);
+    Task<Models.Reservation?> GetByIdAsync(int id, ReservationQueryOptions queryOptions);
+    Task<Models.Reservation?> GetLastByCustomerAsync(int customerId, ReservationQueryOptions queryOptions);
+    Task<Models.Reservation?> GetLastByBookAsync(int bookId, ReservationQueryOptions queryOptions);
+    Task<List<Models.Reservation>> GetAllPagedAsync(ReservationQueryOptions queryOptions, PaginationOptions paginationOptions);
+    Task<List<Models.Reservation>> GetByCustomerPagedAsync(int customerId, ReservationQueryOptions queryOptions, PaginationOptions paginationOptions);
+    Task<List<Models.Reservation>> GetByBookPagedAsync(int bookId, ReservationQueryOptions queryOptions, PaginationOptions paginationOptions);
     Task<int> CountAsync();
     Task<int> CountByCustomerIdAsync(int customerId);
     Task<int> CountByBookIdAsync(int bookId);

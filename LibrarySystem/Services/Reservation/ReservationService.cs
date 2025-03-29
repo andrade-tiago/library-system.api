@@ -25,11 +25,11 @@ public class ReservationService(
     private readonly IMapper _mapper = mapper;
     private readonly int _expirationDays = options.Value.ExpirationDays;
 
-    public async Task<ApiResponse<ReservationDto?>> GetByIdAsync(int id)
+    public async Task<ApiResponse<ReservationDto?>> GetByIdAsync(int id, ReservationQueryOptions queryOptions)
     {
         ApiResponse<ReservationDto?> response = new();
 
-        var bookReservation = await _reservationRepository.GetByIdAsync(id);
+        var bookReservation = await _reservationRepository.GetByIdAsync(id, queryOptions);
 
         if (bookReservation is null)
         {
@@ -41,7 +41,7 @@ public class ReservationService(
         return response;
     }
 
-    public async Task<ApiResponse<ReservationDto?>> GetLastByCustomerAsync(int customerId)
+    public async Task<ApiResponse<ReservationDto?>> GetLastByCustomerAsync(int customerId, ReservationQueryOptions queryOptions)
     {
         ApiResponse<ReservationDto?> response = new();
 
@@ -52,7 +52,7 @@ public class ReservationService(
             return response;
         }
 
-        var reservation = await _reservationRepository.GetLastByCustomerAsync(customerId);
+        var reservation = await _reservationRepository.GetLastByCustomerAsync(customerId, queryOptions);
         if (reservation is null)
         {
             _mapper.Map(ResponseStatus.ReservationNotFound, response);
@@ -64,7 +64,7 @@ public class ReservationService(
         return response;
     }
 
-    public async Task<ApiResponse<ReservationDto?>> GetLastByBookAsync(int bookId)
+    public async Task<ApiResponse<ReservationDto?>> GetLastByBookAsync(int bookId, ReservationQueryOptions queryOptions)
     {
         ApiResponse<ReservationDto?> response = new();
 
@@ -75,7 +75,7 @@ public class ReservationService(
             return response;
         }
 
-        var reservation = await _reservationRepository.GetLastByBookAsync(bookId);
+        var reservation = await _reservationRepository.GetLastByBookAsync(bookId, queryOptions);
         if (reservation is null)
         {
             _mapper.Map(ResponseStatus.ReservationNotFound, response);
@@ -87,7 +87,7 @@ public class ReservationService(
         return response;
     }
 
-    public async Task<ApiResponse<List<ReservationDto>>> GetAllPagedAsync(PaginationRequest pagination)
+    public async Task<ApiResponse<List<ReservationDto>>> GetAllPagedAsync(ReservationQueryOptions queryOptions, PaginationOptions paginationOptions)
     {
         ApiResponse<List<ReservationDto>> response = new();
 
@@ -95,25 +95,25 @@ public class ReservationService(
 
         response.Pagination = new Pagination
         {
-            CurrentPage  = pagination.Page,
-            ItemsPerPage = pagination.PageSize,
+            CurrentPage  = paginationOptions.Page,
+            ItemsPerPage = paginationOptions.PageSize,
             TotalItems   = reservationTotalCount,
         };
 
-        if (pagination.Page > response.Pagination.TotalPages)
+        if (paginationOptions.Page > response.Pagination.TotalPages)
         {
             _mapper.Map(ResponseStatus.ReservationEmptyPage, response);
             response.Result = [];
             return response;
         }
-        var reservations = await _reservationRepository.GetAllPagedAsync(pagination.Page, pagination.PageSize);
+        var reservations = await _reservationRepository.GetAllPagedAsync(queryOptions, paginationOptions);
 
         _mapper.Map(ResponseStatus.ReservationFetchedMany, response);
         response.Result = _mapper.Map<List<ReservationDto>>(reservations);
         return response;
     }
 
-    public async Task<ApiResponse<List<ReservationDto>>> GetByCustomerPagedAsync(int customerId, PaginationRequest pagination)
+    public async Task<ApiResponse<List<ReservationDto>>> GetByCustomerPagedAsync(int customerId, ReservationQueryOptions queryOptions, PaginationOptions paginationOptions)
     {
         ApiResponse<List<ReservationDto>> response = new();
 
@@ -127,26 +127,26 @@ public class ReservationService(
 
         response.Pagination = new Pagination
         {
-            CurrentPage  = pagination.Page,
-            ItemsPerPage = pagination.PageSize,
+            CurrentPage  = paginationOptions.Page,
+            ItemsPerPage = paginationOptions.PageSize,
             TotalItems   = customerReservationTotalCount,
         };
 
-        if (pagination.Page > response.Pagination.TotalPages)
+        if (response.Pagination.CurrentPage > response.Pagination.TotalPages)
         {
             _mapper.Map(ResponseStatus.ReservationEmptyPage, response);
             response.Result = [];
             return response;
         }
         var reservations = await _reservationRepository
-            .GetByCustomerPagedAsync(customerId, pagination.Page, pagination.PageSize);
+            .GetByCustomerPagedAsync(customerId, queryOptions, paginationOptions);
 
         _mapper.Map(ResponseStatus.ReservationFetchedMany, response);
         response.Result = _mapper.Map<List<ReservationDto>>(reservations);
         return response;
     }
 
-    public async Task<ApiResponse<List<ReservationDto>>> GetByBookPagedAsync(int bookId, PaginationRequest pagination)
+    public async Task<ApiResponse<List<ReservationDto>>> GetByBookPagedAsync(int bookId, ReservationQueryOptions queryOptions, PaginationOptions paginationOptions)
     {
         ApiResponse<List<ReservationDto>> response = new();
 
@@ -160,19 +160,19 @@ public class ReservationService(
 
         response.Pagination = new Pagination
         {
-            CurrentPage  = pagination.Page,
-            ItemsPerPage = pagination.PageSize,
+            CurrentPage  = paginationOptions.Page,
+            ItemsPerPage = paginationOptions.PageSize,
             TotalItems   = bookReservationTotalCount,
         };
 
-        if (pagination.Page > response.Pagination.TotalPages)
+        if (response.Pagination.CurrentPage > response.Pagination.TotalPages)
         {
             _mapper.Map(ResponseStatus.ReservationEmptyPage, response);
             response.Result = [];
             return response;
         }
         var reservations = await _reservationRepository
-            .GetByBookPagedAsync(bookId, pagination.Page, pagination.PageSize);
+            .GetByBookPagedAsync(bookId, queryOptions, paginationOptions);
 
         _mapper.Map(ResponseStatus.ReservationFetchedMany, response);
         response.Result = _mapper.Map<List<ReservationDto>>(reservations);
@@ -207,14 +207,14 @@ public class ReservationService(
             return response;
         }
 
-        var lastCustomerReservation = await _reservationRepository.GetLastByCustomerAsync(dto.CustomerId);
+        var lastCustomerReservation = await _reservationRepository.GetLastByCustomerAsync(dto.CustomerId, ReservationQueryOptions.Default);
         if (lastCustomerReservation?.ReturnedDate is not null)
         {
             _mapper.Map(ResponseStatus.OpenCustomerReservation, response);
             return response;
         }
         
-        var lastBookReservation = await _reservationRepository.GetLastByBookAsync(dto.BookId);
+        var lastBookReservation = await _reservationRepository.GetLastByBookAsync(dto.BookId, ReservationQueryOptions.Default);
         if (lastBookReservation is not null && lastBookReservation.ReturnedDate is null)
         {
             _mapper.Map(ResponseStatus.OpenBookReservation, response);
@@ -245,7 +245,7 @@ public class ReservationService(
     {
         ApiResponse<ReservationDto?> response = new();
 
-        var reservation = await _reservationRepository.GetByIdAsync(id);
+        var reservation = await _reservationRepository.GetByIdAsync(id, ReservationQueryOptions.Default);
         if (reservation is null)
         {
             _mapper.Map(ResponseStatus.ReservationNotFound, response);

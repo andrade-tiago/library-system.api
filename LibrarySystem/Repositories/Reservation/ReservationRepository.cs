@@ -1,5 +1,8 @@
 ﻿using LibrarySystem.Data;
+using LibrarySystem.DTOs.Request;
+using LibrarySystem.DTOs.Reservation;
 using Microsoft.EntityFrameworkCore;
+using Sprache;
 
 namespace LibrarySystem.Repositories.Reservation;
 
@@ -7,77 +10,137 @@ public class ReservationRepository(AppDbContext context) : IReservationRepositor
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<Models.Reservation?> GetByIdAsync(int id)
+    public async Task<Models.Reservation?> GetByIdAsync(int id, ReservationQueryOptions queryOptions)
     {
-        return await _context.Reservations
-            .Include(br => br.Customer)
-            .Include(br => br.Book)
-            .Include(br => br.Book.Authors)
+        var query = _context.Reservations.AsQueryable();
+
+        if (queryOptions.IncludeBook)
+        {
+            query = query.Include(br => br.Book);
+
+            if (queryOptions.IncludeBookAuthors)
+                query = query.Include(br => br.Book.Authors);
+        }
+
+        if (queryOptions.IncludeCustomer)
+            query = query.Include(br => br.Customer);
+
+        return await query
             .OrderByDescending(br => br.Id)
             .FirstOrDefaultAsync(br => br.Id == id);
     }
 
-    public async Task<Models.Reservation?> GetLastByCustomerAsync(int customerId)
+    public async Task<Models.Reservation?> GetLastByCustomerAsync(int customerId, ReservationQueryOptions queryOptions)
     {
-        return await _context.Reservations
-            .Include(br => br.Book)
-            .Include(br => br.Book.Authors)
-            .Include(br => br.Customer)
+        var query = _context.Reservations.AsQueryable();
+
+        if (queryOptions.IncludeBook)
+        {
+            query = query.Include(br => br.Book);
+
+            if (queryOptions.IncludeBookAuthors)
+                query = query.Include(br => br.Book.Authors);
+        }
+
+        if (queryOptions.IncludeCustomer)
+            query = query.Include(br => br.Customer);
+
+        return await query
             .OrderByDescending(br => br.Id)
             .FirstOrDefaultAsync(br => br.Customer.Id == customerId);
     }
 
-    public async Task<Models.Reservation?> GetLastByBookAsync(int bookId)
+    public async Task<Models.Reservation?> GetLastByBookAsync(int bookId, ReservationQueryOptions queryOptions)
     {
-        return await _context.Reservations
-            .Include(br => br.Book)
-            .Include(br => br.Book.Authors)
-            .Include(br => br.Customer)
+        var query = _context.Reservations.AsQueryable();
+
+        if (queryOptions.IncludeBook)
+        {
+            query = query.Include(br => br.Book);
+
+            if (queryOptions.IncludeBookAuthors)
+                query = query.Include(br => br.Book.Authors);
+        }
+
+        if (queryOptions.IncludeCustomer)
+            query = query.Include(br => br.Customer);
+
+        return await query
             .OrderByDescending(br => br.Id)
             .FirstOrDefaultAsync(br => br.Book.Id == bookId);
     }
 
-    public async Task<List<Models.Reservation>> GetAllPagedAsync(int page, int pageSize)
+    public async Task<List<Models.Reservation>> GetAllPagedAsync(ReservationQueryOptions queryOptions, PaginationOptions paginationOptions)
     {
-        int skipCount = (page - 1) * pageSize;
+        var query = _context.Reservations.AsQueryable();
 
-        return await _context.Reservations
-            .Include(br => br.Book)
-            .Include(br => br.Book.Authors)
-            .Include(br => br.Customer)
+        if (queryOptions.IncludeBook)
+        {
+            query = query.Include(br => br.Book);
+
+            if (queryOptions.IncludeBookAuthors)
+                query = query.Include(br => br.Book.Authors);
+        }
+
+        if (queryOptions.IncludeCustomer)
+            query = query.Include(br => br.Customer);
+
+        int skipCount = (paginationOptions.Page - 1) * paginationOptions.PageSize;
+
+        return await query
             .OrderByDescending(br => br.Id)
             .Skip(skipCount)
-            .Take(pageSize)
+            .Take(paginationOptions.PageSize)
             .ToListAsync();
     }
 
-    public async Task<List<Models.Reservation>> GetByCustomerPagedAsync(int customerId, int page, int pageSize)
+    public async Task<List<Models.Reservation>> GetByCustomerPagedAsync(int customerId, ReservationQueryOptions queryOptions, PaginationOptions paginationOptions)
     {
-        int skipCount = (page - 1) * pageSize;
+        var query = _context.Reservations.AsQueryable();
 
-        return await _context.Reservations
-            .Include(br => br.Book)
-            .Include(br => br.Book.Authors)
-            .Include(br => br.Customer)
+        if (queryOptions.IncludeBook)
+        {
+            query = query.Include(br => br.Book);
+
+            if (queryOptions.IncludeBookAuthors)
+                query = query.Include(br => br.Book.Authors);
+        }
+
+        if (queryOptions.IncludeCustomer)
+            query = query.Include(br => br.Customer);
+
+        int skipCount = (paginationOptions.Page - 1) * paginationOptions.PageSize;
+
+        return await query
             .OrderByDescending(br => br.Id)
             .Where(br => br.Customer.Id == customerId)
             .Skip(skipCount)
-            .Take(pageSize)
+            .Take(paginationOptions.PageSize)
             .ToListAsync();
     }
 
-    public async Task<List<Models.Reservation>> GetByBookPagedAsync(int bookId, int page, int pageSize)
+    public async Task<List<Models.Reservation>> GetByBookPagedAsync(int bookId, ReservationQueryOptions queryOptions, PaginationOptions paginationOptions)
     {
-        int skipCount = (page - 1) * pageSize;
+        var query = _context.Reservations.AsQueryable();
 
-        return await _context.Reservations
-            .Include(br => br.Customer)
-            .Include(br => br.Book)
-            .Include(br => br.Book.Authors)
+        if (queryOptions.IncludeBook)
+        {
+            query = query.Include(br => br.Book);
+
+            if (queryOptions.IncludeBookAuthors)
+                query = query.Include(br => br.Book.Authors);
+        }
+
+        if (queryOptions.IncludeCustomer)
+            query = query.Include(br => br.Customer);
+
+        int skipCount = (paginationOptions.Page - 1) * paginationOptions.PageSize;
+
+        return await query
             .OrderByDescending(br => br.Id)
             .Where(br => br.Book.Id == bookId)
             .Skip(skipCount)
-            .Take(pageSize)
+            .Take(paginationOptions.PageSize)
             .ToListAsync();
     }
 

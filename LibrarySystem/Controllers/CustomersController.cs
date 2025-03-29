@@ -40,7 +40,7 @@ public class CustomersController(ICustomerService customerService) : ControllerB
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationOptions pagination)
     {
         var response = await _customerService.GetAllPagedAsync(pagination);
 

@@ -2,7 +2,7 @@
 
 namespace LibrarySystem.DTOs.Book;
 
-public class BookGetAllPagedDto : PaginationRequest
+public class BookGetAllPagedDto : PaginationOptions
 {
     public bool IncludeAuthors { get; set; } = false;
 }

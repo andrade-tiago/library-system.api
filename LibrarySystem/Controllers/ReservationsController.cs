@@ -15,53 +15,53 @@ public class ReservationsController(IReservationService reservationService) : Co
 
     [HttpGet("{id}", Name = "GetReservationById")]
     [ValidateIdFilter]
-    public async Task<IActionResult> GetByIdAsync(int id)
+    public async Task<IActionResult> GetByIdAsync(int id, [FromQuery] ReservationQueryOptions queryOptions)
     {
-        var response = await _reservationService.GetByIdAsync(id);
+        var response = await _reservationService.GetByIdAsync(id, queryOptions);
 
         return response.Result is not null ? Ok(response) : NotFound(response);
     }
 
     [HttpGet("/api/customers/{customerId}/reservations/last")]
     [ValidateIdFilter(nameof(customerId))]
-    public async Task<IActionResult> GetLastByCustomerAsync(int customerId)
+    public async Task<IActionResult> GetLastByCustomerAsync(int customerId, [FromQuery] ReservationQueryOptions queryOptions)
     {
-        var response = await _reservationService.GetLastByCustomerAsync(customerId);
+        var response = await _reservationService.GetLastByCustomerAsync(customerId, queryOptions);
 
         return response.Result is not null ? Ok(response) : NotFound(response);
     }
 
     [HttpGet("/api/books/{bookId}/reservations/last")]
     [ValidateIdFilter(nameof(bookId))]
-    public async Task<IActionResult> GetLastByBookAsync(int bookId)
+    public async Task<IActionResult> GetLastByBookAsync(int bookId, [FromQuery] ReservationQueryOptions queryOptions)
     {
-        var response = await _reservationService.GetLastByBookAsync(bookId);
+        var response = await _reservationService.GetLastByBookAsync(bookId, queryOptions);
 
         return response.Result is not null ? Ok(response) : NotFound(response);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetAllPagedAsync([FromQuery] ReservationQueryOptions queryOptions, [FromQuery] PaginationOptions paginationOptions)
     {
-        var response = await _reservationService.GetAllPagedAsync(pagination);
+        var response = await _reservationService.GetAllPagedAsync(queryOptions, paginationOptions);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
 
     [HttpGet("/api/customers/{customerId}/reservations")]
     [ValidateIdFilter(nameof(customerId))]
-    public async Task<IActionResult> GetByCustomerPagedAsync(int customerId, [FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetByCustomerPagedAsync(int customerId, [FromQuery] ReservationQueryOptions queryOptions, [FromQuery] PaginationOptions paginationOptions)
     {
-        var response = await _reservationService.GetByCustomerPagedAsync(customerId, pagination);
+        var response = await _reservationService.GetByCustomerPagedAsync(customerId, queryOptions, paginationOptions);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }
 
     [HttpGet("/api/books/{bookId}/reservations")]
     [ValidateIdFilter(nameof(bookId))]
-    public async Task<IActionResult> GetByBookPagedAsync(int bookId, [FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetByBookPagedAsync(int bookId, [FromQuery] ReservationQueryOptions queryOptions, [FromQuery] PaginationOptions paginationOptions)
     {
-        var response = await _reservationService.GetByBookPagedAsync(bookId, pagination);
+        var response = await _reservationService.GetByBookPagedAsync(bookId, queryOptions, paginationOptions);
 
         return response.Result?.Count > 0 ? Ok(response) : NotFound(response);
     }

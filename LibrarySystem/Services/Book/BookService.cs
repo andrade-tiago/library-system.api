@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LibrarySystem.Constants;
 using LibrarySystem.DTOs.Book;
+using LibrarySystem.DTOs.Reservation;
 using LibrarySystem.DTOs.Response;
 using LibrarySystem.Repositories.Author;
 using LibrarySystem.Repositories.Book;
@@ -207,7 +208,7 @@ public class BookService(
         // Cannot mark a book as unavailable if it is reserved
         if (dto.IsAvailable == false && book.IsAvailable)
         {
-            var lastBookReservation = await _reservationRepository.GetLastByBookAsync(bookId);
+            var lastBookReservation = await _reservationRepository.GetLastByBookAsync(bookId, ReservationQueryOptions.Default);
             if (lastBookReservation is not null && lastBookReservation.ReturnedDate is null)
             {
                 _mapper.Map(ResponseStatus.OpenBookReservation, response);

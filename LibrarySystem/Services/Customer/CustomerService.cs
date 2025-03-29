@@ -2,6 +2,7 @@
 using LibrarySystem.Constants;
 using LibrarySystem.DTOs.Customer;
 using LibrarySystem.DTOs.Request;
+using LibrarySystem.DTOs.Reservation;
 using LibrarySystem.DTOs.Response;
 using LibrarySystem.Repositories.Customer;
 using LibrarySystem.Repositories.Reservation;
@@ -55,7 +56,7 @@ public class CustomerService(
         return response;
     }
 
-    public async Task<ApiResponse<List<CustomerDto>>> GetAllPagedAsync(PaginationRequest pagination)
+    public async Task<ApiResponse<List<CustomerDto>>> GetAllPagedAsync(PaginationOptions pagination)
     {
         ApiResponse<List<CustomerDto>> response = new();
 
@@ -138,7 +139,7 @@ public class CustomerService(
             return response;
         }
 
-        var customerLastReservation = await _reservationRepository.GetLastByCustomerAsync(id);
+        var customerLastReservation = await _reservationRepository.GetLastByCustomerAsync(id, ReservationQueryOptions.Default);
         if (customerLastReservation is not null && customerLastReservation.ReturnedDate is null)
         {
             _mapper.Map(ResponseStatus.OpenCustomerReservation, response);

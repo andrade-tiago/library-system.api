@@ -32,7 +32,7 @@ public class AuthorsController(IAuthorService authorService) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationRequest pagination)
+    public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationOptions pagination)
     {
         var response = await _authorService.GetAllPagedAsync(pagination);
 

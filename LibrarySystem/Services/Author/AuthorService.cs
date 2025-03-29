@@ -51,7 +51,7 @@ public class AuthorService(
         return response;
     }
 
-    public async Task<ApiResponse<List<AuthorDto>>> GetAllPagedAsync(PaginationRequest pagination)
+    public async Task<ApiResponse<List<AuthorDto>>> GetAllPagedAsync(PaginationOptions pagination)
     {
         ApiResponse<List<AuthorDto>> response = new();
 
